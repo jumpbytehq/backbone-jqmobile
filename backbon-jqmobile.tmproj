@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>JumpByte/git/backbone-jqmobile/brainstorming.md</string>
+	<string>src/core.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,21 +21,21 @@
 	<integer>200</integer>
 	<key>metaData</key>
 	<dict>
-		<key>JumpByte/git/backbone-jqmobile/README.md</key>
+		<key>docs/backbone-jqmobile.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>24</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>115</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>103</integer>
 		</dict>
-		<key>JumpByte/git/backbone-jqmobile/brainstorming.md</key>
+		<key>docs/brainstorming.md</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -49,14 +49,72 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>JumpByte/git/backbone-jqmobile/sample.js</key>
+		<key>docs/sample.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+				<integer>12</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>4</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>31</integer>
+				<integer>6</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+		</dict>
+		<key>src/core.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>43</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>19</integer>
+		</dict>
+		<key>test/first/app.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>2</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>test/first/index.html</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>75</integer>
+				<key>line</key>
+				<integer>15</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -66,9 +124,12 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>JumpByte/git/backbone-jqmobile/brainstorming.md</string>
-		<string>JumpByte/git/backbone-jqmobile/sample.js</string>
-		<string>JumpByte/git/backbone-jqmobile/README.md</string>
+		<string>docs/brainstorming.md</string>
+		<string>docs/sample.js</string>
+		<string>docs/backbone-jqmobile.js</string>
+		<string>test/first/index.html</string>
+		<string>test/first/app.js</string>
+		<string>src/core.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

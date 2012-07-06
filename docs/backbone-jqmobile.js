@@ -5,13 +5,21 @@ window.jumpui = {};
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.platform==undefined) {
-			//throw error;
-			return;
+			throw("containerEl is not defined.");
+		}
+		if(this.containerEl==undefined) {
+			throw("containerEl is not defined.");
 		}
 		this.platform.setup();
 	},
 	currentPage:undefined,
-	pages:{}
+	pages:{},	
+	load: function() {
+		if(this.pages==undefined || this.pages.length<=0) {
+			throw("No pages found in app");
+		}
+		this.goto(this.pages[0].hash)
+	},
 	addPage:function(hash, page) {
 		pages[hash] = page;
 	},
@@ -21,10 +29,20 @@ jumpui.JqmApp = Backbone.Model.extend({
 			return;
 		}
 		var page = pages[pageHash];
+		if(!page.isLoaded()) {
+			page.load();
+		}
 		this._changePage(page);
 	},
-	_changePage(page) {
-		$.mobile.changePage();
+	_changePage:function(page) {
+		$.mobile.changePage(page.el);
+	},
+	_loadPage:function(page) {
+		page.load();
+		// if(this.currentPage!=undefined) {
+		// 	
+		// }
+		$(this.containerEl).append(page.el);
 	}
 });
 
@@ -70,7 +88,18 @@ _.each(jumpui.model, function(value, name) {
 
 /* ######## PAGES ############# */
 jumpui.Page = Backbone.View.extend({
-	
+	tagName: "div",
+	className: "jump-page",
+	attributes: {
+		data-role: "page"
+	},
+	initialize:function(){
+		
+	},
+	isLoaded:false,
+	load:function() {
+		
+	}
 });
 
 /* ######## BLOCKS ############# */
@@ -81,11 +110,24 @@ jumpui.block = {};
 jumpui.b = {};
 
 jumpui.Block = Backbone.View.extend({
-	
+	tagName: "div",
 });
 
 jumpui.block.Header = jumpui.block.Block.extend({
-	tagName: "div",
+	className: "jump-header",
+	attributes: {
+		data-role: "header"
+	},
+	render:function(){
+		
+	}
+});
+
+jumpui.block.Footer = jumpui.block.Block.extend({
+	className: "jump-footer",
+	attributes: {
+		data-role: "footer"
+	},
 	render:function(){
 		
 	}
