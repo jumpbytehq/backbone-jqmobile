@@ -11,9 +11,8 @@ jumpui.JqmApp = Backbone.Model.extend({
 		if(this.attributes.containerEl==undefined) {
 			throw "containerEl is not specified for this app";
 		}
+		_.extend(this, this.attributes);
 		this.pages={};
-		this.platform = this.attributes.platform;
-		this.containerEl = this.attributes.containerEl;
 		this.router = new Backbone.Router();
 		this.platform.setup();
 	},
@@ -37,12 +36,17 @@ jumpui.JqmApp = Backbone.Model.extend({
 				self._jQChangePage(page);
 				
 				//Removing old page;
-				if(self.currentPage) {
-					console.log('destroying old page');
-					self.currentPage.remove();
-				}
+				// if(self.currentPage) {
+				// 					console.log('destroying old page');
+				// 					self.currentPage.remove();
+				// 				}
 				self.currentPage = page;
 			});
+		});
+		
+		//Remove hidden DOM page
+		$(this.containerEl).live('pageshow', function(event, ui) {
+		    $(ui.prevPage).remove();
 		});
 		
 		//START APP
@@ -50,6 +54,7 @@ jumpui.JqmApp = Backbone.Model.extend({
 		Backbone.history.start();
 	},
 	addPage:function(page) {
+		page.app = this;
 		this.pages[page.name] = page;
 	}
 	,

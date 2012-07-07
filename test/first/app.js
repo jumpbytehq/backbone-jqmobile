@@ -4,18 +4,14 @@ $(document).bind("mobileinit", function(){
 	jumpApp = new jumpui.JqmApp({
 		platform: jumpui.Platform.WEB,
 		containerEl: '#appContainer',
-		templateEngine: jumpui.template.engine.UNDERSCORE
+		templateEngine: new jumpui.template.engine.Handlebars()
 	});
 
 	var Header = jumpui.block.Header.extend({
-		getContent:function(){
-			return "<h3>App Header</h3>" ;
-		}
+		templateKey: "header"
 	});
 	var footer = new jumpui.block.Footer({
-		getContent:function(){
-			return "<h3>App Footer</h3>" ;
-		}
+		templateKey: "footer"
 	});
 	
 	var loginPage = new jumpui.Page({
@@ -24,14 +20,12 @@ $(document).bind("mobileinit", function(){
 			'header':new Header(),
 			'content': new jumpui.block.Content({
 				events:{
-					//"click #btn":"open"
+					"click #btn":"open"
 				},
 				open:function() {
 					alert('button clicked');
 				},
-				getContent:function(){
-					return "<h3>App Content</h3> <a href='#home' id='btn' data-role='button'>Klick!</a>" ;
-				}
+				templateKey: "login"
 			}),
 			'footer':footer
 		},
@@ -47,9 +41,7 @@ $(document).bind("mobileinit", function(){
 		blocks: {
 			'header':new Header(),
 			'content': new jumpui.block.Content({
-				getContent:function(){
-					return "<h3>Home Content</h3>" ;
-				}
+				templateKey: "home"
 			}),
 			'footer':footer
 		},

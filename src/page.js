@@ -9,31 +9,36 @@ jumpui.Page = Backbone.View.extend({
 		if(options == undefined || options.name==undefined) {
 			throw ("name property is compulsory");
 		}
-		this.name=options.name;
+		if(options.prepare==undefined) {
+			throw ("prepare property is compulsory");
+		}
+		_.extend(this,options);
 		this.id=options.name;
-		this.route=options.name;
-		this.prepare = options.prepare;
 		this.loaded=false;
-		if(options.route) {
-			this.route = options.route;
+		if(this.route == undefined) {
+			this.route = this.name;
 		}
-		this.blocks={};
-		if(options.blocks) {
-			_.extend(this.blocks, options.blocks);
-		}
+		this.setBlocks(options.blocks || {});
+	},
+	setBlocks:function(blocks) {
+		var self =this;
+		//_.extend(this.blocks, blocks);
+		this.blocks = blocks;
+		_.each(this.blocks, function(block) { block.page = self; });		
 	},
 	isLoaded:function(){
-		return this.loaded;
+		return false;
+		//return this.loaded;
 	},
 	load:function(container) {
 		container.append(this.el);
 		$(this.el).page();
 		this.loaded=true;
 	},
-	remove:function() {
-		//$(this.el).remove();
-		//this.loaded=false;
-	},
+	// remove:function() {
+	// 		$(this.el).remove();
+	// 		this.loaded=false;
+	// },
 	render: function() {
 		console.log('Rendering ' + this.name, this);
 		var self = this;

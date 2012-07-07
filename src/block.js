@@ -3,9 +3,15 @@ jumpui.Block = Backbone.View.extend({
 	tagName: "div",
 	initialize:function(){
 		_.extend(this, this.options);
-
+		
 	},
 	render:function(){
+		var $el = $(this.el);
+		$el.empty();
+		if(this.templateKey) {
+			$el.append(this.page.app.templateEngine.parse(this.templateKey, this.model));
+			return;
+		} 
 		if(this.getContent!=null) {
 			//$(this.el).empty().append($(this.getContent()));
 			$(this.el).empty().append($(this.getContent()));
