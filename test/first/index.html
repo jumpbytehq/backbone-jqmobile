@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.css" />
 		
 		<script id="header" type="text/x-handlebars-template">
+			<a data-rel='back'>Back</a>
 			<h3> Header </h3>
 		</script>
 		<script id="footer" type="text/x-handlebars-template">
@@ -15,8 +16,13 @@
 		</script>
 		<script id="home" type="text/x-handlebars-template">
 			<h3> Home Page </h3>
+			<p> About: </p>
+			<a href="#about/abc" data-role="button">About</a>
 		</script>
-		
+		<script id="about" type="text/x-handlebars-template">
+			<h3> About</h3>
+			<p> {{title}} </p>
+		</script>
 		<script src="../lib/jquery-1.7.1.js"></script>
 		<script src="../lib/backbone/underscore-1.3.3.js"></script>
 		<script src="../lib/backbone/backbone-0.9.2.js"></script>
@@ -27,7 +33,12 @@
 		<script src="../../src/template.js"></script>
 		<script src="app.js"></script>
 		<script src="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.js"></script>
-		
+		<<script type="text/javascript" charset="utf-8">
+			$.mobile.ajaxEnabled = false;
+			$.mobile.linkBindingEnabled = false;
+			$.mobile.hashListeningEnabled = false;
+			$.mobile.pushStateEnabled = false;
+		</script>>
 	</head>
 	<body id="appContainer">
 	</body>

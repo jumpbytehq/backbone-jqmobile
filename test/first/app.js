@@ -38,6 +38,7 @@ $(document).bind("mobileinit", function(){
 
 	var homePage = new jumpui.Page({
 		name: "home",
+		route: "home",
 		blocks: {
 			'header':new Header(),
 			'content': new jumpui.block.Content({
@@ -52,7 +53,25 @@ $(document).bind("mobileinit", function(){
 	});
 	jumpApp.addPage(homePage);
 
-	
+	var aboutPage = new jumpui.Page({
+		name: "about",
+		route:"about/:title",
+		blocks: {
+			'header':new Header(),
+			'content': new jumpui.block.Content({
+				templateKey: "about",
+				prepare:function(title) {
+					this.model = {'title':title};
+				}
+			}),
+			'footer':footer
+		},
+		prepare:function(title) {
+			this.model={title: 'Page title'};
+			this.render();
+		}
+	});
+	jumpApp.addPage(aboutPage);
 });
 // 
 $(document).ready(function() {

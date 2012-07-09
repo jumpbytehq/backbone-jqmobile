@@ -45,6 +45,10 @@ jumpui.Page = Backbone.View.extend({
 		$(self.el).empty();
 		_.each(_.keys(this.blocks), function(blockKey) {
 			var block = self.blocks[blockKey];
+			if(block.model==undefined) {
+				block.model = {};
+			}
+			_.extend(block.page.model, block.model);
 			block.render();
 			console.log(self.name + ": EL: ", block.el);
 			$(self.el).append(block.el);
