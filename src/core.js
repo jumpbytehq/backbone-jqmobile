@@ -1,6 +1,5 @@
 /* ######## APP ############# */
 window.jumpui = {};
-
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.attributes.platform==undefined) {

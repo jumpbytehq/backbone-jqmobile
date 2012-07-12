@@ -1,6 +1,5 @@
 /* ######## APP ############# */
 window.jumpui = {};
-
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.attributes.platform==undefined) {
@@ -28,8 +27,9 @@ jumpui.JqmApp = Backbone.Model.extend({
 				page.prepare.apply(page, args);
 				_.each(page.blocks, function(block){
 					//prepare block
-					if(block.prepare) { block.prepare.apply(block.prepare, args)};
+					if(block.prepare) { block.prepare.apply(block, args)};
 				});
+				page.render();
 				//Load page
 				page.load($(self.containerEl));
 				self._jQChangePage(page);
@@ -103,9 +103,6 @@ jumpui.Platform.WEB = new jumpui.Platform({
 jumpui.template = {};
 jumpui.template.engine = {};
 jumpui.Template = Backbone.Model.extend({
-	initialize:function(src) {
-		this.src = src;
-	},
 	parse: function(templateKey, model){
 		return templateKey;
 	}
@@ -117,6 +114,15 @@ jumpui.template.engine.Underscore = jumpui.Template.extend({
 	}
 });
 jumpui.template.engine.Handlebars = jumpui.Template.extend({
+	initialize:function(options) {
+		_.extend(this,options);
+		
+		//REGISTER HELPERS
+		var helpers = this.helpers || {};
+		_.each(_.keys(helpers), function(helperKey){
+			Handlebars.registerHelper(helperKey, helpers[helperKey]);
+		})
+	},
 	parse:function(templateKey, model) {
 		var source   = $("#"+templateKey).html();
 		var template = Handlebars.compile(source);
@@ -216,7 +222,8 @@ jumpui.Page = Backbone.View.extend({
 			if(block.model==undefined) {
 				block.model = {};
 			}
-			_.extend(block.page.model, block.model);
+			_.extend(block.model, block.page.model);
+			//_.extend(block.page.model, block.model);
 			block.render();
 			console.log(self.name + ": EL: ", block.el);
 			$(self.el).append(block.el);
