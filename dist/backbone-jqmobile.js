@@ -1,8 +1,6 @@
+/* ######## APP ############# */
 window.jumpui = {};
 
-/*
- * App class
- */
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.attributes.platform==undefined) {
@@ -16,7 +14,8 @@ jumpui.JqmApp = Backbone.Model.extend({
 		this.router = new Backbone.Router();
 		this.platform.setup();
 	},
-	load: function() {
+	load: function(options) {
+		options = options || {};
 		if(this.pages.length<=0) {
 			throw("No pages found in app");
 		}
@@ -52,32 +51,19 @@ jumpui.JqmApp = Backbone.Model.extend({
 		//START APP
 		//this.goto(_.keys(this.pages)[0]);
 		Backbone.history.start();
+		if(options.rootPage==undefined) {
+			this.router.navigate(_.values(this.pages)[0].name);
+		} else {
+			this.router.navigate(options.rootPage);
+		}
 	},
 	addPage:function(page) {
 		page.app = this;
 		this.pages[page.name] = page;
-	}
-	,
-	// goto:function(pageNameOrPage) {
-	// 		if(pageNameOrPage==undefined) {
-	// 			throw("pageName not defined");
-	// 		}
-	// 		if($(this.containerEl).length<=0) {
-	// 			throw('containerEl is not available in DOM. containerEl: ' + this.containerEl);
-	// 		}
-	// 
-	// 		var page = undefined;
-	// 		if(_.isObject(pageNameOrPage)) {
-	// 			page = pageNameOrPage;
-	// 		} else {
-	// 			page = this.pages[pageNameOrPage];
-	// 		}
-	// 		
-	// 		if(!page.isLoaded()) {
-	// 	 		page.load($(this.containerEl));
-	// 	 	}
-	// 		this._jQChangePage(page);
-	// 	},
+	},
+	navigate:function(route) {
+		this.router.navigate(route, {trigger:true});
+	},
 	_jQChangePage:function(page) {
 		$.mobile.changePage($(page.el));
 	}
@@ -113,10 +99,8 @@ jumpui.Platform.CORDOVA = new jumpui.Platform({
 jumpui.Platform.WEB = new jumpui.Platform({
 	
 });
-var fun1 = function() {
- console.log(this);
-}
-/* ######## PLATFORM END ############# */jumpui.template = {};
+/* ######## PLATFORM END ############# *//* ######## TEMPLATE ############# */
+jumpui.template = {};
 jumpui.template.engine = {};
 jumpui.Template = Backbone.Model.extend({
 	initialize:function(src) {
@@ -138,7 +122,8 @@ jumpui.template.engine.Handlebars = jumpui.Template.extend({
 		var template = Handlebars.compile(source);
 		return template(model);	  
 	}
-});jumpui.block = {};
+});/* ######## BLOCK ############# */
+jumpui.block = {};
 jumpui.Block = Backbone.View.extend({
 	tagName: "div",
 	initialize:function(){
@@ -180,7 +165,8 @@ jumpui.block.Content = jumpui.Block.extend({
 	attributes: {
 		'data-role': "content"
 	}
-});jumpui.Page = Backbone.View.extend({
+});/* ######## PAGE ############# */
+jumpui.Page = Backbone.View.extend({
 	tagName: "div",
 	className: "jump-page",
 	attributes: {

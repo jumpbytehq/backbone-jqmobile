@@ -6,6 +6,16 @@ $(document).bind("mobileinit", function(){
 		templateEngine: new jumpui.template.engine.Handlebars()
 	});
 	
+	jumpApp.model = {
+		User: Backbone.Model.extend({
+			
+		})
+	};	
+	jumpApp.model.UserCollection= Backbone.Collection.extend({
+		model:jumpApp.model.User,
+		url:"../data/users.json"
+	});
+	
 	jumpApp.Header = jumpui.block.Header.extend({
 		templateKey: "header"
 	});
@@ -76,6 +86,10 @@ $(document).bind("mobileinit", function(){
 
 $(document).ready(function() {
 	setTimeout(function(){
+		jumpApp.lists={
+			users:new jumpApp.model.UserCollection()
+		}
+		jumpApp.lists.users.fetch();
 		jumpApp.app.load();
 	},1000);
 });

@@ -1,3 +1,4 @@
+/* ######## BLOCK ############# */
 jumpui.block = {};
 jumpui.Block = Backbone.View.extend({
 	tagName: "div",
