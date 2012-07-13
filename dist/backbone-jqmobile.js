@@ -32,13 +32,10 @@ jumpui.JqmApp = Backbone.Model.extend({
 				page.render();
 				//Load page
 				page.load($(self.containerEl));
-				self._jQChangePage(page);
-				
-				//Removing old page;
-				// if(self.currentPage) {
-				// 					console.log('destroying old page');
-				// 					self.currentPage.remove();
-				// 				}
+				// FIRST TIME |OR| Different page
+				//if(!self.currentPage || (self.currentPage && self.currentPage.name != page.name)) {
+					self._jQChangePage(page);
+				//} 
 				self.currentPage = page;
 			});
 		});
@@ -213,10 +210,10 @@ jumpui.Page = Backbone.View.extend({
 	// 		$(this.el).remove();
 	// 		this.loaded=false;
 	// },
-	render: function() {
-		console.log('Rendering ' + this.name, this);
+	_createDom: function() {
 		var self = this;
-		$(self.el).empty();
+		//NOTE: $(self.el).remove(); GETS REMOVED when page transition complete, so not removing here. 
+		this.setElement(this.make(this.tagName, this.attributes));
 		_.each(_.keys(this.blocks), function(blockKey) {
 			var block = self.blocks[blockKey];
 			if(block.model==undefined) {
@@ -228,5 +225,9 @@ jumpui.Page = Backbone.View.extend({
 			console.log(self.name + ": EL: ", block.el);
 			$(self.el).append(block.el);
 		});
+	},
+	render: function() {
+		console.log('Rendering ' + this.name, this);
+		this._createDom();
 	}
 });
