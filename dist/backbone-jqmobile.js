@@ -24,19 +24,30 @@ jumpui.JqmApp = Backbone.Model.extend({
 			self.router.route(page.route, page.name, function(){
 				var args = arguments;
 				//prepare page
-				page.prepare.apply(page, args);
+				var allowed = false;
+				allowed = page.prepare.apply(page, args);
+				//exit function
+				if(!allowed) { return; }
 				_.each(page.blocks, function(block){
 					//prepare block
-					if(block.prepare) { block.prepare.apply(block, args)};
+					if(block.prepare) {
+						allowed = block.prepare.apply(block, args);
+						//break loop
+						if(!allowed) { return; }
+					};
 				});
+				//exit function.
+				if(!allowed) { return; }
+				
 				page.render();
 				//Load page
 				page.load($(self.containerEl));
 				// FIRST TIME |OR| Different page
 				//if(!self.currentPage || (self.currentPage && self.currentPage.name != page.name)) {
 					self._jQChangePage(page);
-				//} 
+				//}
 				self.currentPage = page;
+				$(page.el).trigger('jui-pageloaded');
 			});
 		});
 		
@@ -48,15 +59,20 @@ jumpui.JqmApp = Backbone.Model.extend({
 		//START APP
 		//this.goto(_.keys(this.pages)[0]);
 		Backbone.history.start();
-		if(options.rootPage==undefined) {
-			this.router.navigate(_.values(this.pages)[0].name);
-		} else {
-			this.router.navigate(options.rootPage);
-		}
+		// if(window.location.hash=="#" || window.location.hash.length==0) {
+		// 			if(options.rootPage==undefined) {
+		// 				this.navigate(_.values(this.pages)[0].name);
+		// 			} else {
+		// 				this.navigate(options.rootPage);
+		// 			}
+		// 		}
 	},
 	addPage:function(page) {
 		page.app = this;
 		this.pages[page.name] = page;
+		if(this.theme) {
+			page.attributes['data-theme'] = this.theme;
+		}
 	},
 	navigate:function(route) {
 		this.router.navigate(route, {trigger:true});
@@ -134,8 +150,9 @@ jumpui.Block = Backbone.View.extend({
 		
 	},
 	render:function(){
+		$(this.el).remove();
+		this.setElement(this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
-		$el.empty();
 		if(this.templateKey) {
 			$el.append(this.page.app.templateEngine.parse(this.templateKey, this.model));
 			return;
@@ -204,6 +221,7 @@ jumpui.Page = Backbone.View.extend({
 	load:function(container) {
 		container.append(this.el);
 		$(this.el).page();
+		// $(this.el).trigger('create');
 		this.loaded=true;
 	},
 	// remove:function() {
@@ -229,5 +247,6 @@ jumpui.Page = Backbone.View.extend({
 	render: function() {
 		console.log('Rendering ' + this.name, this);
 		this._createDom();
+		$(this.el).trigger('jui-pagerendered');
 	}
 });

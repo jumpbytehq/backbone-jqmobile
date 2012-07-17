@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/list/index.html</string>
+	<string>src/page.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -68,28 +68,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>19</integer>
+				<integer>28</integer>
 				<key>line</key>
-				<integer>1</integer>
+				<integer>38</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>55</integer>
+			<integer>52</integer>
 		</dict>
 		<key>src/page.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>43</integer>
+				<integer>25</integer>
 				<key>line</key>
-				<integer>51</integer>
+				<integer>42</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>11</integer>
+			<integer>16</integer>
 		</dict>
 		<key>src/template.js</key>
 		<dict>
@@ -177,20 +177,6 @@
 				<integer>48</integer>
 			</dict>
 		</dict>
-		<key>test/list/app.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>94</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>test/list/index.html</key>
 		<dict>
 			<key>caret</key>
@@ -229,7 +215,6 @@
 		<string>test/first/index.html</string>
 		<string>test/first/app.js</string>
 		<string>test/list/index.html</string>
-		<string>test/list/app.js</string>
 		<string>src/core.js</string>
 		<string>src/page.js</string>
 		<string>README.md</string>
@@ -240,6 +225,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{326, 3}, {1130, 874}}</string>
+	<string>{{310, 4}, {1130, 874}}</string>
 </dict>
 </plist>

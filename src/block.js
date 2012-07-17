@@ -7,8 +7,9 @@ jumpui.Block = Backbone.View.extend({
 		
 	},
 	render:function(){
+		$(this.el).remove();
+		this.setElement(this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
-		$el.empty();
 		if(this.templateKey) {
 			$el.append(this.page.app.templateEngine.parse(this.templateKey, this.model));
 			return;

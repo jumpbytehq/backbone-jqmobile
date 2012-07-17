@@ -34,6 +34,7 @@ jumpui.Page = Backbone.View.extend({
 	load:function(container) {
 		container.append(this.el);
 		$(this.el).page();
+		// $(this.el).trigger('create');
 		this.loaded=true;
 	},
 	// remove:function() {
@@ -59,5 +60,6 @@ jumpui.Page = Backbone.View.extend({
 	render: function() {
 		console.log('Rendering ' + this.name, this);
 		this._createDom();
+		$(this.el).trigger('jui-pagerendered');
 	}
 });

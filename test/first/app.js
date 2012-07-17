@@ -31,7 +31,7 @@ $(document).bind("mobileinit", function(){
 			},
 			prepare:function() {
 				this.model={title: "Abcd"};
-				this.render();
+				return true;
 			}
 		}),
 		homePage: new jumpui.Page({
@@ -46,7 +46,7 @@ $(document).bind("mobileinit", function(){
 			},
 			prepare:function() {
 				this.model={title: "Abcd"};
-				this.render();
+				return true;
 			}
 		}),
 		aboutPage: new jumpui.Page({
@@ -58,13 +58,14 @@ $(document).bind("mobileinit", function(){
 					templateKey: "about",
 					prepare:function(title) {
 						this.model = {'title':title};
+						return true;
 					}
 				}),
 				'footer':jumpApp.footer
 			},
 			prepare:function(title) {
 				this.model={title: 'Page title'};
-				this.render();
+				return true;
 			}
 		})
 	};

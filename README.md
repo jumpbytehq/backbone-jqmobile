@@ -5,5 +5,5 @@ Backbone provides very good modularization and MV* pattern for javascript applic
 After developing couple of applications on jquery-mobile and backbone, We quickly realize that its not simple to use both together as both are overlapping on few areas. 
 
 This framework addresses following  
-1. Backbone and Jquery-mobile integration
+1. Backbone and Jquery-mobile integration 
 2. Backbone based jquery-mobile classes and widgets.
