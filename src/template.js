@@ -1,18 +1,18 @@
 /* ######## TEMPLATE ############# */
 jumpui.template = {};
 jumpui.template.engine = {};
-jumpui.Template = Backbone.Model.extend({
+jumpui.TemplateEngine = Backbone.Model.extend({
 	parse: function(templateKey, model){
 		return templateKey;
 	}
 });
 
-jumpui.template.engine.Underscore = jumpui.Template.extend({
+jumpui.template.engine.Underscore = jumpui.TemplateEngine.extend({
 	parse:function(templateKey, model) {
 		throw("UNDERSCORE not implemented yet");
 	}
 });
-jumpui.template.engine.Handlebars = jumpui.Template.extend({
+jumpui.template.engine.Handlebars = jumpui.TemplateEngine.extend({
 	initialize:function(options) {
 		_.extend(this,options);
 		

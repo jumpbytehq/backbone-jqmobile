@@ -1,5 +1,8 @@
 /* ######## APP ############# */
 window.jumpui = {};
+/*
+ * JqmApp is application class, There should be only one instance per app.
+ */
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.attributes.platform==undefined) {
@@ -28,13 +31,13 @@ jumpui.JqmApp = Backbone.Model.extend({
 				allowed = page.prepare.apply(page, args);
 				//exit function
 				if(!allowed) { return; }
-				_.each(page.blocks, function(block){
+				_.every(page.blocks, function(block){
 					//prepare block
 					if(block.prepare) {
 						allowed = block.prepare.apply(block, args);
-						//break loop
-						if(!allowed) { return; }
-					};
+						//break loop if false
+						return allowed;
+					}
 				});
 				//exit function.
 				if(!allowed) { return; }
@@ -69,10 +72,10 @@ jumpui.JqmApp = Backbone.Model.extend({
 	},
 	addPage:function(page) {
 		page.app = this;
-		this.pages[page.name] = page;
 		if(this.theme) {
 			page.attributes['data-theme'] = this.theme;
 		}
+		this.pages[page.name] = page;
 	},
 	navigate:function(route) {
 		this.router.navigate(route, {trigger:true});
@@ -85,7 +88,8 @@ jumpui.JqmApp = Backbone.Model.extend({
 
 /* ######## PLATFORM ############# */
 /*
- * Platform class Web,Cordova
+ * Specifies platform on which this application should run.
+ * i.e. WEB, CORDOVA
  */
 jumpui.Platform = Backbone.Model.extend({
 	setup:function(){

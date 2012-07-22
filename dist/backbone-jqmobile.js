@@ -1,5 +1,8 @@
 /* ######## APP ############# */
 window.jumpui = {};
+/*
+ * JqmApp is application class, There should be only one instance per app.
+ */
 jumpui.JqmApp = Backbone.Model.extend({
 	initialize:function() {
 		if(this.attributes.platform==undefined) {
@@ -28,13 +31,13 @@ jumpui.JqmApp = Backbone.Model.extend({
 				allowed = page.prepare.apply(page, args);
 				//exit function
 				if(!allowed) { return; }
-				_.each(page.blocks, function(block){
+				_.every(page.blocks, function(block){
 					//prepare block
 					if(block.prepare) {
 						allowed = block.prepare.apply(block, args);
-						//break loop
-						if(!allowed) { return; }
-					};
+						//break loop if false
+						return allowed;
+					}
 				});
 				//exit function.
 				if(!allowed) { return; }
@@ -69,10 +72,10 @@ jumpui.JqmApp = Backbone.Model.extend({
 	},
 	addPage:function(page) {
 		page.app = this;
-		this.pages[page.name] = page;
 		if(this.theme) {
 			page.attributes['data-theme'] = this.theme;
 		}
+		this.pages[page.name] = page;
 	},
 	navigate:function(route) {
 		this.router.navigate(route, {trigger:true});
@@ -85,7 +88,8 @@ jumpui.JqmApp = Backbone.Model.extend({
 
 /* ######## PLATFORM ############# */
 /*
- * Platform class Web,Cordova
+ * Specifies platform on which this application should run.
+ * i.e. WEB, CORDOVA
  */
 jumpui.Platform = Backbone.Model.extend({
 	setup:function(){
@@ -115,18 +119,18 @@ jumpui.Platform.WEB = new jumpui.Platform({
 /* ######## PLATFORM END ############# *//* ######## TEMPLATE ############# */
 jumpui.template = {};
 jumpui.template.engine = {};
-jumpui.Template = Backbone.Model.extend({
+jumpui.TemplateEngine = Backbone.Model.extend({
 	parse: function(templateKey, model){
 		return templateKey;
 	}
 });
 
-jumpui.template.engine.Underscore = jumpui.Template.extend({
+jumpui.template.engine.Underscore = jumpui.TemplateEngine.extend({
 	parse:function(templateKey, model) {
 		throw("UNDERSCORE not implemented yet");
 	}
 });
-jumpui.template.engine.Handlebars = jumpui.Template.extend({
+jumpui.template.engine.Handlebars = jumpui.TemplateEngine.extend({
 	initialize:function(options) {
 		_.extend(this,options);
 		
@@ -240,7 +244,7 @@ jumpui.Page = Backbone.View.extend({
 			_.extend(block.model, block.page.model);
 			//_.extend(block.page.model, block.model);
 			block.render();
-			console.log(self.name + ": EL: ", block.el);
+			//console.log(self.name + ": EL: ", block.el);
 			$(self.el).append(block.el);
 		});
 	},

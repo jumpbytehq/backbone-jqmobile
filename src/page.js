@@ -53,7 +53,7 @@ jumpui.Page = Backbone.View.extend({
 			_.extend(block.model, block.page.model);
 			//_.extend(block.page.model, block.model);
 			block.render();
-			console.log(self.name + ": EL: ", block.el);
+			//console.log(self.name + ": EL: ", block.el);
 			$(self.el).append(block.el);
 		});
 	},

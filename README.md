@@ -5,5 +5,57 @@ Backbone provides very good modularization and MV* pattern for javascript applic
 After developing couple of applications on jquery-mobile and backbone, We quickly realize that its not simple to use both together as both are overlapping on few areas. 
 
 This framework addresses following  
-1. Backbone and Jquery-mobile integration 
+1. Backbone and Jquery-mobile integration.  
 2. Backbone based jquery-mobile classes and widgets.
+
+###Terminology###
+**jumpui**  
+jumpui is global namespace used. 
+
+####Core####
+**JqmApp** (jumpui.JqmApp)  
+JqmApp is application class, There should be only one instance per app.
+
+**Platform** (jumpui.Platform)  
+Specifies platform on which this application should run.  
+i.e. WEB, CORDOVA.  
+*Note:* Currently only WEB as platform is supported. But it also works just fine on CORDOVA. This class is mainly for future use.
+
+**TemplateEngine** (jumpui.TemplateEngine)  
+backbone-jqmobile supports templating out of box.  
+	* jumpui.template.engine.Handlebars   
+	* jumpui.template.engine.Underscore (Not implemented yet)
+
+####View####
+All the view classes are extended from Backbone.View, so most of the features of Backbone.View should work.
+
+**Page**  
+Page is root (parent) UI element which takes up whole page area.  
+Each page has name & route(URL hash) attribute. So when back button is clicked app will display (and execute proper call chain) of previous page.  
+Basically it is Jquery-mobile data-role='page' div. 
+
+ 
+**Block**  
+Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts *templateKey* as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.
+
+Currently following blocks are implemented and ready to use.  
+  * Header  
+  * Content    
+  * Footer  
+
+Block and Page share lot of common features.
+
+*Note:* Currently all blocks are rendered sequentially within Page, but later on, there will be template for Page too.
+
+####Widget (coming soon)####   
+Widgets are jquery mobile views, binded with Backbone.Model or Backbone.Collection.  
+Takes away pain with refreshing jquery-mobile views, when data changes. Allows programatically creation of forms/list easily.
+
+Some of planned widgets are  
+  * ListView (collection backed)  
+  * Popup (Model backed)  
+  * Form  
+  * etc.  
+  
+
+###Demo###
