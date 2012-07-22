@@ -42,8 +42,15 @@
 			$.mobile.linkBindingEnabled = false;
 			$.mobile.hashListeningEnabled = false;
 			$.mobile.pushStateEnabled = false;
-		</script>>
+		</script>
 	</head>
-	<body id="appContainer">
+	
+	<body>
+		<div id="fakeMobile" style="width:360px; height:600px">
+			 <div id="appContainer">
+				<!-- Required for jquery mobile to determine which DIV is root for Jquery Mobile -->
+			 	<div class="dummy" data-role="page"></div>
+			 </div>
+		</div>
 	</body>
 </html>

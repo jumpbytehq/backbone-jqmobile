@@ -8,11 +8,11 @@ This framework addresses following
 1. Backbone and Jquery-mobile integration.  
 2. Backbone based jquery-mobile classes and widgets.
 
-###Terminology###
+##Terminology##
 **jumpui**  
 jumpui is global namespace used. 
 
-####Core####
+###Core####
 **JqmApp** (jumpui.JqmApp)  
 JqmApp is application class, There should be only one instance per app.
 
@@ -26,7 +26,7 @@ backbone-jqmobile supports templating out of box.
 	* jumpui.template.engine.Handlebars   
 	* jumpui.template.engine.Underscore (Not implemented yet)
 
-####View####
+###View###
 All the view classes are extended from Backbone.View, so most of the features of Backbone.View should work.
 
 **Page**  
@@ -47,7 +47,7 @@ Block and Page share lot of common features.
 
 *Note:* Currently all blocks are rendered sequentially within Page, but later on, there will be template for Page too.
 
-####Widget (coming soon)####   
+###Widget (coming soon)###
 Widgets are jquery mobile views, binded with Backbone.Model or Backbone.Collection.  
 Takes away pain with refreshing jquery-mobile views, when data changes. Allows programatically creation of forms/list easily.
 
@@ -59,3 +59,39 @@ Some of planned widgets are
   
 
 ###Demo###
+**Basic demo (single page, without template)**  
+	//Main app instance
+	app = new jumpui.JqmApp({
+	    platform: jumpui.Platform.WEB,
+	    containerEl: '#appContainer',
+	    templateEngine: new jumpui.template.engine.Handlebars()
+	});
+	
+	var demoPage = new jumpui.Page({
+	    name:"Demo",
+	    route:"demo",
+	    blocks:{
+	        'header':new jumpui.block.Header({
+	            getContent:function(){
+	                return '<h3>Demo</h3>';
+	            }
+	        }),
+	        'content':new jumpui.block.Content({
+	            getContent:function(){
+	                return '<p>' + this.model.text + '</p>'
+	            }
+	        })
+	    },
+	    prepare:function(){
+	        this.model={'text':'hello world'};
+	        return true;
+	    }
+	});
+	
+	//add page to app                
+	app.addPage(demoPage);
+	app.load();
+    console.log('application loaded, and nav to demo');
+​
+
+<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/nachiket/mtLkk/show/light/#demo" frameborder="0"></iframe>
