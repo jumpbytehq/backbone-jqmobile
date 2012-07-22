@@ -59,7 +59,9 @@ Some of planned widgets are
   
 
 ###Demo###
-**Basic demo (single page, without template)**  
+**Basic demo (single page, without template)**   
+```javascript  
+
 	//Main app instance
 	app = new jumpui.JqmApp({
 	    platform: jumpui.Platform.WEB,
@@ -92,6 +94,5 @@ Some of planned widgets are
 	app.addPage(demoPage);
 	app.load();
     console.log('application loaded, and nav to demo');
-​
-
-<iframe style="width: 100%; height: 300px" src="http://jsfiddle.net/nachiket/mtLkk/show/light/#demo" frameborder="0"></iframe>
+```  
+Demo On [JSFiddle](http://jsfiddle.net/nachiket/mtLkk/)
