@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Backbone-jqmobile : Backbone framework for jquery mobile." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Backbone-jqmobile</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jumpbytehq/backbone-jqmobile">View on GitHub</a>
+
+          <h1 id="project_title">Backbone-jqmobile</h1>
+          <h2 id="project_tagline">Backbone framework for jquery mobile.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jumpbytehq/backbone-jqmobile/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jumpbytehq/backbone-jqmobile/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>backbone-jqmobile</h1>
+
+<p>Backbone provides very good modularization and MV* pattern for javascript applications. On the other hand jquery-mobile is having very easy to use, versatile, cross-device compatible HTML5 mobile UI framework.</p>
+
+<p>After developing couple of applications on jquery-mobile and backbone, We quickly realize that its not simple to use both together as both are overlapping on few areas. </p>
+
+<p>This framework addresses following<br>
+1. Backbone and Jquery-mobile integration.<br>
+2. Backbone based jquery-mobile classes and widgets.</p>
+
+<h2>Terminology</h2>
+
+<p><strong>jumpui</strong><br>
+jumpui is global namespace used. </p>
+
+<h3>Core</h3>
+
+<p><strong>JqmApp</strong> (jumpui.JqmApp)<br>
+JqmApp is application class, There should be only one instance per app.</p>
+
+<p><strong>Platform</strong> (jumpui.Platform)<br>
+Specifies platform on which this application should run.<br>
+i.e. WEB, CORDOVA.<br><em>Note:</em> Currently only WEB as platform is supported. But it also works just fine on CORDOVA. This class is mainly for future use.</p>
+
+<p><strong>TemplateEngine</strong> (jumpui.TemplateEngine)<br>
+backbone-jqmobile supports templating out of box.<br>
+    * jumpui.template.engine.Handlebars<br>
+    * jumpui.template.engine.Underscore (Not implemented yet)</p>
+
+<h3>View</h3>
+
+<p>All the view classes are extended from Backbone.View, so most of the features of Backbone.View should work.</p>
+
+<p><strong>Page</strong><br>
+Page is root (parent) UI element which takes up whole page area.<br>
+Each page has name &amp; route(URL hash) attribute. So when back button is clicked app will display (and execute proper call chain) of previous page.<br>
+Basically it is Jquery-mobile data-role='page' div. </p>
+
+<p><strong>Block</strong><br>
+Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts <em>templateKey</em> as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.</p>
+
+<p>Currently following blocks are implemented and ready to use.  </p>
+
+<ul>
+<li>Header<br>
+</li>
+<li>Content<br>
+</li>
+<li>Footer<br>
+</li>
+</ul><p>Block and Page share lot of common features.</p>
+
+<p><em>Note:</em> Currently all blocks are rendered sequentially within Page, but later on, there will be template for Page too.</p>
+
+<h3>Widget (coming soon)</h3>
+
+<p>Widgets are jquery mobile views, binded with Backbone.Model or Backbone.Collection.<br>
+Takes away pain with refreshing jquery-mobile views, when data changes. Allows programatically creation of forms/list easily.</p>
+
+<p>Some of planned widgets are  </p>
+
+<ul>
+<li>ListView (collection backed)<br>
+</li>
+<li>Popup (Model backed)<br>
+</li>
+<li>Form<br>
+</li>
+<li>etc.<br>
+</li>
+</ul><h3>Demo</h3>
+
+<p><strong>Basic demo (single page, without template)</strong>   </p>
+
+<div class="highlight">
+<pre>
+    <span class="c1">//Main app instance</span>
+    <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">JqmApp</span><span class="p">({</span>
+        <span class="nx">platform</span><span class="o">:</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">WEB</span><span class="p">,</span>
+        <span class="nx">containerEl</span><span class="o">:</span> <span class="s1">'#appContainer'</span><span class="p">,</span>
+        <span class="nx">templateEngine</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">template</span><span class="p">.</span><span class="nx">engine</span><span class="p">.</span><span class="nx">Handlebars</span><span class="p">()</span>
+    <span class="p">});</span>
+
+    <span class="kd">var</span> <span class="nx">demoPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Page</span><span class="p">({</span>
+        <span class="nx">name</span><span class="o">:</span><span class="s2">"Demo"</span><span class="p">,</span>
+        <span class="nx">route</span><span class="o">:</span><span class="s2">"demo"</span><span class="p">,</span>
+        <span class="nx">blocks</span><span class="o">:</span><span class="p">{</span>
+            <span class="s1">'header'</span><span class="o">:</span><span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Header</span><span class="p">({</span>
+                <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s1">'&lt;h3&gt;Demo&lt;/h3&gt;'</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}),</span>
+            <span class="s1">'content'</span><span class="o">:</span><span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Content</span><span class="p">({</span>
+                <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s1">'&lt;p&gt;'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">text</span> <span class="o">+</span> <span class="s1">'&lt;/p&gt;'</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+        <span class="p">},</span>
+        <span class="nx">prepare</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="o">=</span><span class="p">{</span><span class="s1">'text'</span><span class="o">:</span><span class="s1">'hello world'</span><span class="p">};</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="c1">//add page to app                </span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">addPage</span><span class="p">(</span><span class="nx">demoPage</span><span class="p">);</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">load</span><span class="p">();</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'application loaded, and nav to demo'</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>Demo On <a href="http://jsfiddle.net/nachiket/mtLkk/">JSFiddle</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Backbone-jqmobile maintained by <a href="https://github.com/jumpbytehq">jumpbytehq</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33585830-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
