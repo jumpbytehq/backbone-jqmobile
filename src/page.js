@@ -7,6 +7,7 @@ jumpui.Page = Backbone.View.extend({
 	},
 	//blocks:{},
 	initialize:function(options){
+		_.bindAll(this, 'reload');
 		if(options == undefined || options.name==undefined) {
 			throw ("name property is compulsory");
 		}
@@ -20,6 +21,9 @@ jumpui.Page = Backbone.View.extend({
 			this.route = this.name;
 		}
 		this.setBlocks(options.blocks || {});
+		if(this.init) {
+			this.init();
+		}
 	},
 	setBlocks:function(blocks) {
 		var self =this;
@@ -30,6 +34,12 @@ jumpui.Page = Backbone.View.extend({
 	isLoaded:function(){
 		return false;
 		//return this.loaded;
+	},
+	_attachAndProcess:function(container) {
+		container.append(this.el);
+		$(this.el).page();
+		// $(this.el).trigger('create');
+		this.loaded=true;
 	},
 	load:function(container) {
 		container.append(this.el);
@@ -61,5 +71,39 @@ jumpui.Page = Backbone.View.extend({
 		console.log('Rendering ' + this.name, this);
 		this._createDom();
 		$(this.el).trigger('jui-pagerendered');
+	},
+	_load:function(args, container){
+		//prepare page
+		var allowed = false;
+		allowed = this.prepare.apply(this, args);
+		//exit function
+		if(!allowed) { return; }
+		_.every(this.blocks, function(block){
+			//prepare block
+			if(block.prepare) {
+				allowed = block.prepare.apply(block, args);
+				//break loop if false
+				return allowed;
+			}
+		});
+		//exit function.
+		if(!allowed) { return false; }		
+		this.render();
+		//Load page
+		this._attachAndProcess(container);
+		// FIRST TIME |OR| Different page
+		//if(!self.currentPage || (self.currentPage && self.currentPage.name != page.name)) {
+			this.app._jQChangePage(this);
+		//}
+		return true;
+	},
+	reload: function(args){
+		if(this.visible) {
+			console.log('reloading page ' + this.name);
+			return this._load(args, $(this.app.containerEl));
+		} else {
+			console.log('Unable to reload page ' + this.name + ', as page is not current/visible page');
+			return false;
+		}
 	}
 });

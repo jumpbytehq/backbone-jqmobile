@@ -4,7 +4,9 @@ jumpui.Block = Backbone.View.extend({
 	tagName: "div",
 	initialize:function(){
 		_.extend(this, this.options);
-		
+		if(this.init) {
+			this.init();
+		}
 	},
 	render:function(){
 		$(this.el).remove();

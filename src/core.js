@@ -26,31 +26,16 @@ jumpui.JqmApp = Backbone.Model.extend({
 		_.each(this.pages,function(page) {
 			self.router.route(page.route, page.name, function(){
 				var args = arguments;
-				//prepare page
-				var allowed = false;
-				allowed = page.prepare.apply(page, args);
-				//exit function
-				if(!allowed) { return; }
-				_.every(page.blocks, function(block){
-					//prepare block
-					if(block.prepare) {
-						allowed = block.prepare.apply(block, args);
-						//break loop if false
-						return allowed;
+				if(page._load(args,$(self.containerEl))) {
+					if(self.currentPage) {
+						self.currentPage.visible = false;
 					}
-				});
-				//exit function.
-				if(!allowed) { return; }
-				
-				page.render();
-				//Load page
-				page.load($(self.containerEl));
-				// FIRST TIME |OR| Different page
-				//if(!self.currentPage || (self.currentPage && self.currentPage.name != page.name)) {
-					self._jQChangePage(page);
-				//}
-				self.currentPage = page;
-				$(page.el).trigger('jui-pageloaded');
+					self.currentPage = page;
+					self.currentPage.visible = true;
+					$(page.el).trigger('jui-pageloaded');
+				} else {
+					console.log('Not loading page ' + page.name + " as process returned negetive");
+				}
 			});
 		});
 		
