@@ -98,6 +98,11 @@ jumpui.Page = Backbone.View.extend({
 		return true;
 	},
 	reload: function(args){
+		args = args || [];
+		if(!$.isArray(args)) {
+			console.log('Arguments must be array',args);
+			throw('Arguments must be array');
+		}
 		if(this.visible) {
 			console.log('reloading page ' + this.name);
 			return this._load(args, $(this.app.containerEl));

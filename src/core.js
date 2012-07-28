@@ -1,3 +1,12 @@
+/* ####### SET JQUERY MOBILE DEFAULTS ######## */
+$(document).bind("mobileinit", function(){
+	console.log('setting Jquery mobile on mobile init');
+ 	$.mobile.ajaxEnabled = false;
+	$.mobile.linkBindingEnabled = false;
+	$.mobile.hashListeningEnabled = false;
+	$.mobile.pushStateEnabled = false;
+});
+
 /* ######## APP ############# */
 window.jumpui = {};
 /*
@@ -77,25 +86,13 @@ jumpui.JqmApp = Backbone.Model.extend({
  * i.e. WEB, CORDOVA
  */
 jumpui.Platform = Backbone.Model.extend({
+	initialize:function() {
+	},
 	setup:function(){
-		console.log('in setup');
-		$(document).bind("mobileinit", function(){
-			console.log('hash listening false');
-			$.mobile.ajaxEnabled = false;
-		    $.mobile.linkBindingEnabled = false;
-		    $.mobile.hashListeningEnabled = false;
-		    $.mobile.pushStateEnabled = false;
-		});
 	}
 });
 
 jumpui.Platform.CORDOVA = new jumpui.Platform({
-	setup:function(){
-		$.mobile.ajaxEnabled = false;
-	    $.mobile.linkBindingEnabled = false;
-	    $.mobile.hashListeningEnabled = false;
-	    $.mobile.pushStateEnabled = false;
-	}
 });
 
 jumpui.Platform.WEB = new jumpui.Platform({

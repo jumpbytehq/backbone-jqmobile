@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>Simple Test</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<link rel="stylesheet" href="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.css" />
+		<script src="../lib/jquery-1.7.1.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			// $(document).ready(function() {	
+			$(document).bind("mobileinit", function(){
+				//setTimeout(function(){
+					$.mobile.changePage("#new");
+
+					//jumpApp.app.load();
+			 	//	},1);
+			});
+		</script>
+		<script src="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.js"></script>
+	</head>
+	
+	<body>
+
+
+				<div id="new" data-role="page">new</div>
+	</body>
+</html>

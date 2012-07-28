@@ -22,9 +22,13 @@ jumpui.template.engine.Handlebars = jumpui.TemplateEngine.extend({
 			Handlebars.registerHelper(helperKey, helpers[helperKey]);
 		})
 	},
-	parse:function(templateKey, model) {
+	parse:function(templateKey, model, fragments) {
 		var source   = $("#"+templateKey).html();
 		var template = Handlebars.compile(source);
+		model.fragments = fragments;
 		return template(model);	  
+	},
+	registerPartial: function(partialKey){
+		Handlebars.registerPartial(partialKey, $("#"+partialKey).html());
 	}
 });
