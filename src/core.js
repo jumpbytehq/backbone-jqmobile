@@ -30,23 +30,11 @@ jumpui.JqmApp = Backbone.Model.extend({
 		if(this.pages.length<=0) {
 			throw("No pages found in app");
 		}
-		var self = this;
-		//SETUP ROUTER
-		_.each(this.pages,function(page) {
-			self.router.route(page.route, page.name, function(){
-				var args = arguments;
-				if(page._load(args,$(self.containerEl))) {
-					if(self.currentPage) {
-						self.currentPage.visible = false;
-					}
-					self.currentPage = page;
-					self.currentPage.visible = true;
-					$(page.el).trigger('jui-pageloaded');
-				} else {
-					console.log('Not loading page ' + page.name + " as process returned negetive");
-				}
-			});
-		});
+		// var self = this;
+		// //SETUP ROUTER
+		// _.each(this.pages,function(page) {
+		// 	self._registerPage(page);
+		// });
 		
 		//Remove hidden DOM page
 		$(this.containerEl).live('pageshow', function(event, ui) {
@@ -65,14 +53,34 @@ jumpui.JqmApp = Backbone.Model.extend({
 		// 		}
 	},
 	addPage:function(page) {
+		if(this.router==undefined) {
+			throw('Cannot add page before router is set in Application');
+		}
 		page.app = this;
 		if(this.theme) {
 			page.attributes['data-theme'] = this.theme;
 		}
+		this._registerPage(page);
 		this.pages[page.name] = page;
 	},
 	navigate:function(route) {
 		this.router.navigate(route, {trigger:true});
+	},
+	_registerPage:function(page) {
+		var self = this;
+		this.router.route(page.route, page.name, function(){
+			var args = arguments;
+			if(page._load(args,$(self.containerEl))) {
+				if(self.currentPage) {
+					self.currentPage.visible = false;
+				}
+				self.currentPage = page;
+				self.currentPage.visible = true;
+				$(page.el).trigger('jui-pageloaded');
+			} else {
+				console.log('Not loading page ' + page.name + " as process returned negetive");
+			}
+		});
 	},
 	_jQChangePage:function(page) {
 		$.mobile.changePage($(page.el));
@@ -99,3 +107,12 @@ jumpui.Platform.WEB = new jumpui.Platform({
 	
 });
 /* ######## PLATFORM END ############# */
+jumpui.internal = {};
+jumpui.internal.AbstractView = Backbone.View.extend({
+	initialize:function(){
+		_.extend(this, this.options);
+		if(this.init) {
+			this.init();
+		}
+	}
+});

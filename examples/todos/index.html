@@ -3,6 +3,7 @@
 		<title>Simple Test</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"> 
 		<link rel="stylesheet" href="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.css" />
+		<link rel="stylesheet" href="style.css" />
 		
 		<script id="header" type="text/x-handlebars-template">
 			<h3> Todos </h3>
@@ -24,13 +25,13 @@
 				<button id="addTodo">{{buttonText}}</button>
 		</script>
 		<script id="todosPage" type="text/x-handlebars-template">
-			<ul data-role="listview">
+			<ul id="questionList" data-role="listview">
 				{{#if empty}}
 					<li> No todos found. </li>
 				{{/if}}
 				{{#each todos}}
 					<li>
-						<a>{{title}}</a>
+						<a class="toggle"><img src="images/unchecked_16.png"></img><h3>{{title}}</h3></a>
 						<a href="#input/{{id}}"></a>
 					</li>
 					
@@ -49,6 +50,7 @@
 		<script src="../lib/handlebars-1.0.0.beta.6.js"></script>
 		<!-- backbone-jqmobile code -->
 		<script src="../../src/core.js"></script>
+		<script src="../../src/fragment.js"></script>
 		<script src="../../src/block.js"></script>
 		<script src="../../src/page.js"></script>
 		<script src="../../src/template.js"></script>

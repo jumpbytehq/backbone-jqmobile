@@ -1,0 +1,16 @@
+#questionList {
+	
+}
+
+#questionList a.ui-link-inherit {
+	min-height: 20px;
+	padding-left:32px;
+}
+
+#questionList a.ui-link-inherit h3{
+	margin: 0.1em;
+}
+
+#questionList a.ui-link-inherit img {
+	margin: 13px 10px;
+}

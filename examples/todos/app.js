@@ -89,9 +89,9 @@ $(document).bind("mobileinit", function(){
 		todosPage: new jumpui.Page({
 			name: "todosPage",	
 			route:"",
-			// events: {
-			// 	'click .toggle':'handleToggle'
-			// },
+		 	events: {
+			 	'click .toggle':'handleToggle'
+			},
 			blocks: {
 				'header':new jumpui.block.Header({
 					templateKey: "header"
@@ -103,11 +103,19 @@ $(document).bind("mobileinit", function(){
 					templateKey: "footer"
 				})
 			},
+			init:function() {
+				_.bindAll(this, 'handleToggle')
+			},
 			prepare:function() {
 				this.model={
 					'todos': todos.toJSON(),
 				 	'empty': todos.length==0};
 				return true;
+			},
+			handleToggle:function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				console.log('in toggle: ', e);
 			}
 		}),
 		inputPage: new jumpui.Page({
@@ -124,7 +132,7 @@ $(document).bind("mobileinit", function(){
 				if(this.model.todo.id==undefined) {
 					todos.create({ 'title': newTitle });
 				} else {
-					todos.get(this.model.todo.id).set({'title':newTitle});
+					todos.get(this.model.todo.id).save({'title':newTitle});
 				}
 				console.log('Todo added successfully');
 				todosApp.app.navigate('');
