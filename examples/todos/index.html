@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="style.css" />
 		
 		<script id="header" type="text/x-handlebars-template">
-			<h3> Todos </h3>
+			<h3> Jumpbyte Todos </h3>
 		</script>
 		<script id="footer" type="text/x-handlebars-template">
 			<div data-role="navbar">
@@ -21,8 +21,13 @@
 			<h3> {{title}} </h3>
 		</script>
 		<script id="inputPage" type="text/x-handlebars-template">
-				<textarea id="todoText" placeholder="What needs to be done?">{{todo.title}}</textarea>
-				<button id="addTodo">{{buttonText}}</button>
+				<form>
+					<textarea id="todoText" placeholder="What needs to be done?">{{todo.title}}</textarea>
+					<input type="submit" id="addTodo" value="{{buttonText}}"></input>
+				</form>
+				{{#if todo.title}}
+					<button id="deleteTodo">Delete</button>
+				{{/if}}
 		</script>
 		<script id="todosPage" type="text/x-handlebars-template">
 			<ul id="questionList" data-role="listview">
@@ -31,15 +36,19 @@
 				{{/if}}
 				{{#each todos}}
 					<li>
-						<a class="toggle"><img src="images/unchecked_16.png"></img><h3>{{title}}</h3></a>
+						<a class="toggle" data-todoId="{{id}}">
+							<img src="images/{{#if done}}checked_16.png{{else}}unchecked_16.png{{/if}}"></img>
+							<h3>{{title}}</h3>
+						</a>
 						<a href="#input/{{id}}"></a>
 					</li>
-					
 				{{/each}}
 			</ul>
 		</script>
 		<script id="aboutPage" type="text/x-handlebars-template">
 			<h3> About Page </h3>
+			<p> This Example Todo application is created using <a href="http://jumpbytehq.github.com/backbone-jqmobile/">backbone-jqmmobile</a> framework. It allows rapid development for HTML5 based mobile apps.</p> <br/> 
+			<p>Developed by <a href="http://www.jumpbyte.com">Jumpbyte</a></p>
 		</script>
 		<!-- deps -->
 		<script src="../lib/jquery-1.7.1.js"></script>

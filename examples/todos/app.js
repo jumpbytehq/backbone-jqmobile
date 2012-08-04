@@ -116,18 +116,30 @@ $(document).bind("mobileinit", function(){
 				e.preventDefault();
 				e.stopPropagation();
 				console.log('in toggle: ', e);
+				var todoEl = $(e.currentTarget);
+				var todo = todos.get(todoEl.attr('data-todoId'));
+				todo.toggle();
+				if(todo.get('done')) {
+					todoEl.children('img').attr('src', "images/checked_16.png")
+				} else {
+					todoEl.children('img').attr('src', "images/unchecked_16.png")
+				} 
 			}
 		}),
 		inputPage: new jumpui.Page({
 			name: "inputPage",
 			route: "input/:id",
 			events:{
-				'click #addTodo':'addTodo'
+				'submit form':'addTodo',
+				'click #deleteTodo':'deleteTodo'
 			},
 			init:function(){
 				_.bindAll(this,'addTodo');
+				_.bindAll(this,'deleteTodo');
 			},
 			addTodo:function(e){
+				e.preventDefault();
+				e.stopPropagation();
 				var newTitle = this.$('#todoText').val();
 				if(this.model.todo.id==undefined) {
 					todos.create({ 'title': newTitle });
@@ -135,6 +147,11 @@ $(document).bind("mobileinit", function(){
 					todos.get(this.model.todo.id).save({'title':newTitle});
 				}
 				console.log('Todo added successfully');
+				todosApp.app.navigate('');
+			},
+			deleteTodo:function(e){
+				todos.get(this.model.todo.id).destroy();
+				console.log('Todo deleted successfully');
 				todosApp.app.navigate('');
 			},
 			blocks: {
