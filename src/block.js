@@ -14,19 +14,17 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 		$(this.el).remove();
 		this.setElement(this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
-		if(this.templateKey) {
+		if(this.template) {
 			//FRAGMENT Processing
 			var self = this;
 			var renderedFragments={};
+			if($.isFunction(this.template)) {
+				$el.append(this.page.app.templateEngine.parseHtml(this.template(), this.model, renderedFragments));			
+			} else if(this.template!=undefined) {
+				$el.append(this.page.app.templateEngine.parse(this.template, this.model, renderedFragments));			
+			}
 
-			// _.each(this.fragments, function(fragment,key){
-			// 	renderedFragments[key]=fragment.createHtml(self.page.app.templateEngine, self.model);
-			// });
-			
-			$el.append(this.page.app.templateEngine.parse(this.templateKey, this.model, renderedFragments));
-			
 			_.each(this.fragments, function(fragment,key){
-				//fragment._setEl(self);
 				fragment._setEl(self.$('[data-fragment='+key+']'));
 				fragment.render(); 
 			});
@@ -36,7 +34,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 			//$(this.el).empty().append($(this.getContent()));
 			$(this.el).empty().append($(this.getContent()));
 		} else {
-			throw('Neither templateKey nor getContent method found');
+			throw('Neither template nor getContent method found');
 		}
 	}
 });

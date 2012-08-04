@@ -82,7 +82,7 @@ $(document).bind("mobileinit", function(){
 	var todos = new todosApp.TodoList;
 	todosApp.todos = todos; 
 	todosApp.SecondLevelHeader = jumpui.block.Header.extend({
-		templateKey: "secondLevelHeader"
+		template: "secondLevelHeader"
 	});
 	
 	todosApp.pages = {
@@ -94,13 +94,13 @@ $(document).bind("mobileinit", function(){
 			},
 			blocks: {
 				'header':new jumpui.block.Header({
-					templateKey: "header"
+					template: "header"
 				}),
 				'content': new jumpui.block.Content({
-					templateKey: "todosPage"
+					template: "todosPage"
 				}),
 				'footer':new jumpui.block.Footer({
-					templateKey: "footer"
+					template: "footer"
 				})
 			},
 			init:function() {
@@ -140,7 +140,7 @@ $(document).bind("mobileinit", function(){
 			blocks: {
 				'header':new todosApp.SecondLevelHeader({}),
 				'content': new jumpui.block.Content({
-					templateKey: "inputPage"
+					template: "inputPage"
 				})
 			},
 			prepare:function(id) {
@@ -170,7 +170,7 @@ $(document).bind("mobileinit", function(){
 					}
 				}),
 				'content': new jumpui.block.Content({
-					templateKey: "aboutPage",
+					template: "aboutPage",
 					prepare:function(title) {
 						this.model = {'title':title};
 						return true;

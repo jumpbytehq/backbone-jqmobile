@@ -17,10 +17,10 @@ $(document).bind("mobileinit", function(){
 	});
 	
 	jumpApp.Header = jumpui.block.Header.extend({
-		templateKey: "header"
+		template: "header"
 	});
 	jumpApp.footer = new jumpui.block.Footer({
-		templateKey: "footer"
+		template: "footer"
 	});
 	
 	jumpApp.pages = {
@@ -35,7 +35,7 @@ $(document).bind("mobileinit", function(){
 					open:function() {
 						alert('button clicked');
 					},
-					templateKey: "login"
+					template: "login"
 				}),
 				'footer':jumpApp.footer
 			},
@@ -50,7 +50,7 @@ $(document).bind("mobileinit", function(){
 			blocks: {
 				'header':new jumpApp.Header(),
 				'content': new jumpui.block.Content({
-					templateKey: "home"
+					template: "home"
 				}),
 				'footer':jumpApp.footer
 			},
@@ -65,7 +65,7 @@ $(document).bind("mobileinit", function(){
 			blocks: {
 				'header':new jumpApp.Header(),
 				'content': new jumpui.block.Content({
-					templateKey: "about",
+					template: "about",
 					prepare:function(title) {
 						this.model = {'title':title};
 					}

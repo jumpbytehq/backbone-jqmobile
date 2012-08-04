@@ -36,7 +36,7 @@ Basically it is Jquery-mobile data-role='page' div.
 
  
 **Block**  
-Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts *templateKey* as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.
+Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts *template* as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.
 
 Currently following blocks are implemented and ready to use.  
   * Header  

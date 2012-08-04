@@ -30,23 +30,11 @@ jumpui.JqmApp = Backbone.Model.extend({
 		if(this.pages.length<=0) {
 			throw("No pages found in app");
 		}
-		var self = this;
-		//SETUP ROUTER
-		_.each(this.pages,function(page) {
-			self.router.route(page.route, page.name, function(){
-				var args = arguments;
-				if(page._load(args,$(self.containerEl))) {
-					if(self.currentPage) {
-						self.currentPage.visible = false;
-					}
-					self.currentPage = page;
-					self.currentPage.visible = true;
-					$(page.el).trigger('jui-pageloaded');
-				} else {
-					console.log('Not loading page ' + page.name + " as process returned negetive");
-				}
-			});
-		});
+		// var self = this;
+		// //SETUP ROUTER
+		// _.each(this.pages,function(page) {
+		// 	self._registerPage(page);
+		// });
 		
 		//Remove hidden DOM page
 		$(this.containerEl).live('pageshow', function(event, ui) {
@@ -65,14 +53,34 @@ jumpui.JqmApp = Backbone.Model.extend({
 		// 		}
 	},
 	addPage:function(page) {
+		if(this.router==undefined) {
+			throw('Cannot add page before router is set in Application');
+		}
 		page.app = this;
 		if(this.theme) {
 			page.attributes['data-theme'] = this.theme;
 		}
+		this._registerPage(page);
 		this.pages[page.name] = page;
 	},
 	navigate:function(route) {
 		this.router.navigate(route, {trigger:true});
+	},
+	_registerPage:function(page) {
+		var self = this;
+		this.router.route(page.route, page.name, function(){
+			var args = arguments;
+			if(page._load(args,$(self.containerEl))) {
+				if(self.currentPage) {
+					self.currentPage.visible = false;
+				}
+				self.currentPage = page;
+				self.currentPage.visible = true;
+				$(page.el).trigger('jui-pageloaded');
+			} else {
+				console.log('Not loading page ' + page.name + " as process returned negetive");
+			}
+		});
 	},
 	_jQChangePage:function(page) {
 		$.mobile.changePage($(page.el));
@@ -98,17 +106,27 @@ jumpui.Platform.CORDOVA = new jumpui.Platform({
 jumpui.Platform.WEB = new jumpui.Platform({
 	
 });
-/* ######## PLATFORM END ############# *//* ######## TEMPLATE ############# */
+/* ######## PLATFORM END ############# */
+jumpui.internal = {};
+jumpui.internal.AbstractView = Backbone.View.extend({
+	initialize:function(){
+		_.extend(this, this.options);
+		if(this.init) {
+			this.init();
+		}
+	}
+});
+/* ######## TEMPLATE ############# */
 jumpui.template = {};
 jumpui.template.engine = {};
 jumpui.TemplateEngine = Backbone.Model.extend({
-	parse: function(templateKey, model){
-		return templateKey;
+	parse: function(template, model){
+		return template;
 	}
 });
 
 jumpui.template.engine.Underscore = jumpui.TemplateEngine.extend({
-	parse:function(templateKey, model) {
+	parse:function(template, model) {
 		throw("UNDERSCORE not implemented yet");
 	}
 });
@@ -122,26 +140,56 @@ jumpui.template.engine.Handlebars = jumpui.TemplateEngine.extend({
 			Handlebars.registerHelper(helperKey, helpers[helperKey]);
 		})
 	},
-	parse:function(templateKey, model, fragments) {
-		var source   = $("#"+templateKey).html();
+	parse:function(template, model, fragments) {
+		var source   = $("#"+template).html();
+		return this.parseHtml(source, model, fragments);
+	},
+	parseHtml: function(source, model, fragments) {
 		var template = Handlebars.compile(source);
 		model.fragments = fragments;
-		return template(model);	  
+		return template(model);
 	},
 	registerPartial: function(partialKey){
 		Handlebars.registerPartial(partialKey, $("#"+partialKey).html());
 	}
-});/* ######## BLOCK ############# */
-jumpui.internal = {};
-jumpui.internal.AbstractView = Backbone.View.extend({
+});jumpui.fragment = {};
+jumpui.Fragment = jumpui.internal.AbstractView.extend({
 	initialize:function(){
-		_.extend(this, this.options);
-		if(this.init) {
-			this.init();
+		jumpui.internal.AbstractView.prototype.initialize.apply(this, arguments);
+		this.dataFragment = this.template;
+	},
+	getModel:function(){
+		return {};
+	},
+	render:function(){
+		if(this.$el) {
+			this.$el.empty();
 		}
+		//this.setElement(this.make(this.tagName, this.attributes));
+		//var $el = $(this.el);
+		if($.isFunction(this.template)) {
+			this.$el.append(this.block.page.app.templateEngine.parseHtml(this.template(), this.getModel()));
+			return;
+		} else if(this.template!=undefined) {
+			this.$el.append(this.block.page.app.templateEngine.parse(this.template, this.getModel()));
+			return;
+		} 
+		if(this.getContent!=null) {
+			//$(this.el).empty().append($(this.getContent()));
+			$(this.el).empty().append($(this.getContent()));
+		} else {
+			throw('Neither template nor getContent method found');
+		}
+	},
+	createHtml:function(templateEngine, model) {
+		//var containerEl = this.make(this.tagName, this.attributes);
+		return "<"+this.tagName+" id='" + this.id + "'>" + templateEngine.parse(this.template, model) + "</" + this.tagName + ">";
+	},
+	_setEl:function(element){
+		//this.setElement(context.$("#"+this.id));
+		this.setElement(element);
 	}
-});
-
+});/* ######## BLOCK ############# */
 jumpui.block = {};
 jumpui.Block = jumpui.internal.AbstractView.extend({
 	tagName: "div",
@@ -157,19 +205,17 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 		$(this.el).remove();
 		this.setElement(this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
-		if(this.templateKey) {
+		if(this.template) {
 			//FRAGMENT Processing
 			var self = this;
 			var renderedFragments={};
+			if($.isFunction(this.template)) {
+				$el.append(this.page.app.templateEngine.parseHtml(this.template(), this.model, renderedFragments));			
+			} else if(this.template!=undefined) {
+				$el.append(this.page.app.templateEngine.parse(this.template, this.model, renderedFragments));			
+			}
 
-			// _.each(this.fragments, function(fragment,key){
-			// 	renderedFragments[key]=fragment.createHtml(self.page.app.templateEngine, self.model);
-			// });
-			
-			$el.append(this.page.app.templateEngine.parse(this.templateKey, this.model, renderedFragments));
-			
 			_.each(this.fragments, function(fragment,key){
-				//fragment._setEl(self);
 				fragment._setEl(self.$('[data-fragment='+key+']'));
 				fragment.render(); 
 			});
@@ -179,7 +225,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 			//$(this.el).empty().append($(this.getContent()));
 			$(this.el).empty().append($(this.getContent()));
 		} else {
-			throw('Neither templateKey nor getContent method found');
+			throw('Neither template nor getContent method found');
 		}
 	}
 });
@@ -202,42 +248,6 @@ jumpui.block.Content = jumpui.Block.extend({
 	className: "jump-content",
 	attributes: {
 		'data-role': "content"
-	}
-});
-
-jumpui.fragment = {};
-jumpui.Fragment = jumpui.internal.AbstractView.extend({
-	initialize:function(){
-		jumpui.internal.AbstractView.prototype.initialize.apply(this, arguments);
-		this.dataFragment = this.templateKey;
-	},
-	getModel:function(){
-		return {};
-	},
-	render:function(){
-		if(this.$el) {
-			this.$el.empty();
-		}
-		//this.setElement(this.make(this.tagName, this.attributes));
-		//var $el = $(this.el);
-		if(this.templateKey) {
-			this.$el.append(this.block.page.app.templateEngine.parse(this.templateKey, this.getModel()));
-			return;
-		} 
-		if(this.getContent!=null) {
-			//$(this.el).empty().append($(this.getContent()));
-			$(this.el).empty().append($(this.getContent()));
-		} else {
-			throw('Neither templateKey nor getContent method found');
-		}
-	},
-	createHtml:function(templateEngine, model) {
-		//var containerEl = this.make(this.tagName, this.attributes);
-		return "<"+this.tagName+" id='" + this.id + "'>" + templateEngine.parse(this.templateKey, model) + "</" + this.tagName + ">";
-	},
-	_setEl:function(element){
-		//this.setElement(context.$("#"+this.id));
-		this.setElement(element);
 	}
 });/* ######## PAGE ############# */
 jumpui.Page = Backbone.View.extend({
