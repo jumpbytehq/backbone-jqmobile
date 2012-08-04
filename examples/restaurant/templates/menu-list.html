@@ -1,0 +1,9 @@
+<ul data-role='listview' data-inset="true">
+		{{#if source}}
+			{{#each source}}
+				<li><a href="#menuDetail/{{this.id}}">{{this.title}}</a></li>
+			{{/each}}
+		{{else}}
+			<li>No data found</li>
+		{{/if}}
+		</ul>

@@ -1,0 +1,9 @@
+<ul data-role='listview' data-inset="true">
+		{{#if source}}
+			{{#each source}}
+				<li><a href="#openApp/{{this.name}}">{{this.name}}</a></li>
+			{{/each}}
+		{{else}}
+			<li>No data found</li>
+		{{/if}}
+		</ul>
