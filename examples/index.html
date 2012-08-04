@@ -1,5 +1,45 @@
 <html>
+	<head>
+		<style>
+			.mobile-app-demo-container iframe{
+				border: none;
+				position: relative;
+				top: 91px;
+				left: 26px;
+			}
+			
+			.app, .app a{
+				padding: 10px 5px;
+				background-color: gray;
+				color: white;
+				font-family: verdana;
+			}
+			
+			.mobile-app-demo-container{
+				padding: 5px 10px;
+			}
+			
+			.mobile-app-demo{
+				background-image: url(android-frame.png); 
+				width: 370px; 
+				height: 637px;
+			}
+			
+			
+		</style>
+	</head>
 	<body>
-		<a href="restaurant/index.html">Restaurant App</a>
+	
+		<div class="app">
+			<a href="restaurant/index.html">Restaurant App</a>
+		</div>
+		<div class="mobile-app-demo-container">
+		
+		<div class="mobile-app-demo">
+		<iframe src="http://apps.jumpbyte.com/backbone-jqmobile/restaurant/index.html" width="320" height="480"></iframe>
+		</div>
+		
+		</div>
+		
 	</body>
 </html>
