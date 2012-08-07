@@ -62,7 +62,8 @@ Some of planned widgets are
   
 
 ###Demo###
-** Basic Application Structure **   
+
+**Basic Application Structure**   
 ```javascript  
 
 	//Main app instance
@@ -110,7 +111,7 @@ Some of planned widgets are
 					'data-role': 'footer'
 				},
 				getContent: function(){
-					return "<h3><a href='http://www.jumpbyte.com'>Demo Footer</a></h3>";
+					return "<h3>Demo Footer</h3>";
 				}
 			})
 	    },
@@ -131,45 +132,6 @@ Some of planned widgets are
 	},0);
 ``` 
 
-** Page using Template **
-```javascript  
-
-	//Main app instance
-	app = new jumpui.JqmApp({
-	    platform: jumpui.Platform.WEB,
-	    containerEl: '#appContainer',
-	    templateEngine: new jumpui.template.engine.Handlebars()
-	});
-	
-	var demoPage = new jumpui.Page({
-	    name:"Demo",
-	    route:"demo",
-	    blocks:{
-	        'header':new jumpui.block.Header({
-	            getContent:function(){
-	                return '<h3>Demo</h3>';
-	            }
-	        }),
-	        'content':new jumpui.block.Content({
-	            getContent:function(){
-	                return '<p>' + this.model.text + '</p>'
-	            }
-	        })
-	    },
-	    prepare:function(){
-	        this.model={'text':'hello world'};
-	        return true;
-	    }
-	});
-	
-	//add page to app                
-	app.addPage(demoPage);
-	
-	//fix for now
-	setTimeout(function(){
-		app.load();
-	},0);
-```  
 Demo On [JSFiddle](http://jsfiddle.net/nachiket/mtLkk/)
 
 For more demo check - http://apps.jumpbyte.com/backbone-jqmobile/
