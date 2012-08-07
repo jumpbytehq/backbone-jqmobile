@@ -96,3 +96,5 @@ Some of planned widgets are
     console.log('application loaded, and nav to demo');
 ```  
 Demo On [JSFiddle](http://jsfiddle.net/nachiket/mtLkk/)
+
+For more demo check - http://apps.jumpbyte.com/backbone-jqmobile/
