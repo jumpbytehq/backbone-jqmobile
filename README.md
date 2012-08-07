@@ -92,8 +92,11 @@ Some of planned widgets are
 	
 	//add page to app                
 	app.addPage(demoPage);
-	app.load();
-    console.log('application loaded, and nav to demo');
+	
+	//fix for now
+	setTimeout(function(){
+		app.load();
+	},0);
 ```  
 Demo On [JSFiddle](http://jsfiddle.net/nachiket/mtLkk/)
 
