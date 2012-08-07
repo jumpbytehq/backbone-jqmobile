@@ -100,9 +100,11 @@ Some of planned widgets are
 	            }
 	        }),
 			
-	        'content':new jumpui.block.Content({
-				template: "<p>{{text}}<p>"
-	        }),
+	        'content': new jumpui.block.Content({
+				template: function(){
+					return "<p>{{text}}<p>";
+				}
+			}),
 			
 			'footer': new jumpui.block.Footer({
 				// Can specify additional attributes which will be appended to target element
