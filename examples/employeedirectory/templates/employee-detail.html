@@ -1,0 +1,51 @@
+<ul data-role="listview">
+	<li>
+		<img src="pics/{{employee.firstName}}_{{employee.lastName}}.jpg">
+		<h3>{{employee.firstName}} {{employee.lastName}}</h3>
+		<p>{{employee.title}}</p>
+		<p>{{employee.city}}</p>
+	</li>
+</ul>
+
+<div data-role="fieldcontain">
+<ul data-role="listview">
+	{{#if hasManager}}
+		<li>
+			<a href="#employeeDetail/{{employee.managerId}}" data-transition="slide">
+			<h3>View Manager</h3>
+			<p>{{managerName}}</p>
+			</a>
+		</li>
+	{{/if}}
+	<li>
+		<a href="tel:{{employee.officePhone}}">
+			<h3>Call Office</h3>
+			<p>{{employee.officePhone}}</p>
+		</a>
+	</li>
+	<li>
+		<a href="tel:{{employee.cellPhone}}">
+			<h3>Call Cell</h3>
+			<p>{{employee.cellPhone}}</p>
+		</a>
+	</li>
+	<li>
+		<a class=" sms">
+			<h3>SMS</h3>
+			<p>{{employee.cellPhone}}</p>
+		</a>
+	</li>
+	<li>
+		<a href="mailto:{{employee.email}}">
+			<h3>Email</h3>
+			<p>{{employee.email}}</p>
+		</a>
+	</li>
+	<li>
+		<a class=" addtocontact">
+			<h3>Add to Contacts</h3>
+			<p>{{employee.firstName}} {{employee.lastName}}</p>
+		</a>
+	</li>
+</ul>
+</div>

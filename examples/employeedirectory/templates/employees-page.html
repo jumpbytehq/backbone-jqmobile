@@ -1,0 +1,11 @@
+<ul data-role="listview">
+	{{#each employees}}
+	<li>
+		<a href="#employeeDetail/{{this.id}}" data-transition="slide">
+			<img src="pics/{{this.firstName}}_{{this.lastName}}.jpg">
+			<h3>{{this.firstName}} {{this.lastName}}</h3>
+			<p>{{this.title}}</p>
+		</a>
+	</li>
+	{{/each}}
+</ul>

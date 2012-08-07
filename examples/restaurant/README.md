@@ -9,3 +9,5 @@ The application contains functionalities like.
 * Fragments to refresh partial page
 * Linking pages with data
 * Load and add page functionality dynamically
+
+Application demo is available [here](http://apps.jumpbyte.com/backbone-jqmobile/restaurant/index.html)

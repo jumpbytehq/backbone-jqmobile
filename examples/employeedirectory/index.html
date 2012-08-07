@@ -3,7 +3,7 @@
 <head>
 <meta name="viewport" content="user-scalable=no" />
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<title>Restaurant App</title>
+<title>Employee Directory</title>
 	<link rel="stylesheet" href="../lib/jquery.mobile-1.1.0/jquery.mobile-1.1.0.css" />
 	<style>
 		
@@ -31,29 +31,6 @@
 		$.mobile.linkBindingEnabled = false;
 		$.mobile.hashListeningEnabled = false;
 		$.mobile.pushStateEnabled = false;
-		
-		function loadScript(src, id, callback) {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = false;
-			ga.src = src + "?" + (new Date()).getTime();
-			
-			if(callback){
-				ga.onload = callback;
-			}
-			
-			if (id) {
-				ga.id = id
-			}
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-		}
-		
-		function loadTemplate(src, callback){
-			var data = $.ajax({type: 'GET', url: src + '.html', async: false}).responseText;
-            $("head").append(data);
-			if(callback) callback();
-		}
 	</script>
 </head>
 <body id="appContainer">
