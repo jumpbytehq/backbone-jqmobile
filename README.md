@@ -32,22 +32,50 @@ All the view classes are extended from Backbone.View, so most of the features of
 **Page**  
 Page is root (parent) UI element which takes up whole page area.  
 Each page has name & route(URL hash) attribute. So when back button is clicked app will display (and execute proper call chain) of previous page.  
+
 Basically it is Jquery-mobile data-role='page' div. 
 
  
 **Block**  
-Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts *template* as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.
+Each page is made of one of multiple Blocks. Block can return any HTML content generated manually or generated using template. But Ideally Block accepts *template* as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.
 
 Currently following blocks are implemented and ready to use.  
   * Header  
   * Content    
   * Footer  
 
-Block and Page share lot of common features.
-
+Block and Page share lot of common features.  
+Block is  well suited for higer level page constructs like Header,Sidebar, Footer, Notification bar etc.
+ 
 *Note:* Currently all blocks are rendered sequentially within Page, but later on, there will be template for Page too.
 
-**Events**
+**Fragment**  
+Fragment is a child of Block which can be independtly used.
+It has similar characteristics like Block, but it should be used for independent smaller chunks of UI within a Block.   
+
+Fragment has *template* feature like Block, and *getModel* method should provide model for rendering Fragment.  
+Fragment can be used in Block by specifying *'fragments'* attribute, which has *fragment-key* as Object Key and fragment_object as Object value.  
+
+*For example:*
+
+```  
+fragments: {
+   'loginStatus': new LoginFragment()
+}
+``` 
+and it will be refrenced (and rendered) in Block template by using *data-fragment={fragment-key}*  
+
+*Example of Block template:* 
+
+```
+ <div class='bottomBar'>
+   <div data-fragment='loginStatus'>
+   </div> 
+ </div>
+```
+
+**Events**  
+*Coming soon*
 
 
 ###Widget (coming soon)###
@@ -61,9 +89,52 @@ Some of planned widgets are
   * etc.  
   
 
-###Demo###
+###Demo & Examples###
+**Basic example**  
 
-**Basic Application Structure**   
+```javascript  
+	    
+	//Main app instance
+	app = new jumpui.JqmApp({
+	    platform: jumpui.Platform.WEB,
+	    containerEl: '#appContainer'
+	});
+	
+	var demoPage = new jumpui.Page({
+	    name:"Demo", 
+	    // router is ommitted,so name gets used as route
+	    
+		// Blocks can accept pure HTML content via getContent() or template via template key
+	    blocks:{
+	        'header': new jumpui.block.Header({
+	            getContent:function(){
+	                return '<h3>Demo</h3>';
+	            }
+	        }),
+	        'content': new jumpui.block.Content({
+				getContent:function(){
+	                return '<p>Page content</p>';
+	            }
+			})
+	    },
+		// will be called everytime page is displayed
+	    prepare:function(){
+	        this.model={};
+	        //must return true to continue loading
+	        return true;
+	    }
+	});
+	
+	//add page to app                
+	app.addPage(demoPage);
+	
+	//fix for now
+	setTimeout(function(){
+		app.load();
+	},0);
+```
+
+**Fragments example**   
 ```javascript  
 
 	//Main app instance
@@ -91,7 +162,6 @@ Some of planned widgets are
 		init: function(){
 		},
 		
-		// Series of content, each block is a separate view
 		// Blocks can accept pure HTML content via getContent() or template via template key
 	    blocks:{
 	        'header': new jumpui.block.Header({
