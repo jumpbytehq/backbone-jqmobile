@@ -1,36 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Backbone-jqmobile : Backbone framework for jquery mobile." />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Backbone-jqmobile by jumpbytehq</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Backbone-jqmobile</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Backbone-jqmobile</h1>
+        <p class="header">Backbone framework for jquery mobile.</p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/jumpbytehq/backbone-jqmobile">View on GitHub</a>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/jumpbytehq/backbone-jqmobile/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/jumpbytehq/backbone-jqmobile/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/jumpbytehq/backbone-jqmobile">View On GitHub</a></li>
+        </ul>
 
-          <h1 id="project_title">Backbone-jqmobile</h1>
-          <h2 id="project_tagline">Backbone framework for jquery mobile.</h2>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/jumpbytehq">jumpbytehq</a></p>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/jumpbytehq/backbone-jqmobile/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/jumpbytehq/backbone-jqmobile/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+      </header>
+      <section>
         <h1>backbone-jqmobile</h1>
 
 <p>Backbone provides very good modularization and MV* pattern for javascript applications. On the other hand jquery-mobile is having very easy to use, versatile, cross-device compatible HTML5 mobile UI framework.</p>
@@ -66,11 +65,12 @@ backbone-jqmobile supports templating out of box.<br>
 
 <p><strong>Page</strong><br>
 Page is root (parent) UI element which takes up whole page area.<br>
-Each page has name &amp; route(URL hash) attribute. So when back button is clicked app will display (and execute proper call chain) of previous page.<br>
-Basically it is Jquery-mobile data-role='page' div. </p>
+Each page has name &amp; route(URL hash) attribute. So when back button is clicked app will display (and execute proper call chain) of previous page.  </p>
+
+<p>Basically it is Jquery-mobile data-role='page' div. </p>
 
 <p><strong>Block</strong><br>
-Block is reusable component within page. Page can contain many blocks. Block can return any HTML content generated manually or generated using template manually. But Ideally Block accepts <em>templateKey</em> as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.</p>
+Each page is made of one of multiple Blocks. Block can return any HTML content generated manually or generated using template. But Ideally Block accepts <em>template</em> as attributes, and it will be rendered using specified templateEngine in backbone-jqmobile App instance.</p>
 
 <p>Currently following blocks are implemented and ready to use.  </p>
 
@@ -81,9 +81,36 @@ Block is reusable component within page. Page can contain many blocks. Block can
 </li>
 <li>Footer<br>
 </li>
-</ul><p>Block and Page share lot of common features.</p>
+</ul><p>Block and Page share lot of common features.<br>
+Block is  well suited for higer level page constructs like Header,Sidebar, Footer, Notification bar etc.</p>
 
 <p><em>Note:</em> Currently all blocks are rendered sequentially within Page, but later on, there will be template for Page too.</p>
+
+<p><strong>Fragment</strong><br>
+Fragment is a child of Block which can be independtly used.
+It has similar characteristics like Block, but it should be used for independent smaller chunks of UI within a Block.   </p>
+
+<p>Fragment has <em>template</em> feature like Block, and <em>getModel</em> method should provide model for rendering Fragment.<br>
+Fragment can be used in Block by specifying <em>'fragments'</em> attribute, which has <em>fragment-key</em> as Object Key and fragment_object as Object value.  </p>
+
+<p><em>For example:</em></p>
+
+<pre><code>fragments: {
+   'loginStatus': new LoginFragment()
+}
+</code></pre>
+
+<p>and it will be refrenced (and rendered) in Block template by using <em>data-fragment={fragment-key}</em>  </p>
+
+<p><em>Example of Block template:</em> </p>
+
+<pre><code> &lt;div class='bottomBar'&gt;
+   &lt;div data-fragment='loginStatus'&gt;
+   &lt;/div&gt; 
+ &lt;/div&gt;
+</code></pre>
+
+<p><strong>Events</strong><br><em>Coming soon</em></p>
 
 <h3>Widget (coming soon)</h3>
 
@@ -101,12 +128,54 @@ Takes away pain with refreshing jquery-mobile views, when data changes. Allows p
 </li>
 <li>etc.<br>
 </li>
-</ul><h3>Demo</h3>
+</ul><h3>Demo &amp; Examples</h3>
 
-<p><strong>Basic demo (single page, without template)</strong>   </p>
+<p><strong>Basic example</strong>  </p>
 
-<div class="highlight">
-<pre>
+<div class="highlight"><pre>
+    <span class="c1">//Main app instance</span>
+    <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">JqmApp</span><span class="p">({</span>
+        <span class="nx">platform</span><span class="o">:</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">WEB</span><span class="p">,</span>
+        <span class="nx">containerEl</span><span class="o">:</span> <span class="s1">'#appContainer'</span>
+    <span class="p">});</span>
+
+    <span class="kd">var</span> <span class="nx">demoPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Page</span><span class="p">({</span>
+        <span class="nx">name</span><span class="o">:</span><span class="s2">"Demo"</span><span class="p">,</span> 
+        <span class="c1">// router is ommitted,so name gets used as route</span>
+
+        <span class="c1">// Blocks can accept pure HTML content via getContent() or template via template key</span>
+        <span class="nx">blocks</span><span class="o">:</span><span class="p">{</span>
+            <span class="s1">'header'</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Header</span><span class="p">({</span>
+                <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s1">'&lt;h3&gt;Demo&lt;/h3&gt;'</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}),</span>
+            <span class="s1">'content'</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Content</span><span class="p">({</span>
+                <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s1">'&lt;p&gt;Page content&lt;/p&gt;'</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+        <span class="p">},</span>
+        <span class="c1">// will be called everytime page is displayed</span>
+        <span class="nx">prepare</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="o">=</span><span class="p">{};</span>
+            <span class="c1">//must return true to continue loading</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="c1">//add page to app                </span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">addPage</span><span class="p">(</span><span class="nx">demoPage</span><span class="p">);</span>
+
+    <span class="c1">//fix for now</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">load</span><span class="p">();</span>
+    <span class="p">},</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Fragments example</strong>   </p>
+
+<div class="highlight"><pre>
     <span class="c1">//Main app instance</span>
     <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">JqmApp</span><span class="p">({</span>
         <span class="nx">platform</span><span class="o">:</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">WEB</span><span class="p">,</span>
@@ -116,19 +185,49 @@ Takes away pain with refreshing jquery-mobile views, when data changes. Allows p
 
     <span class="kd">var</span> <span class="nx">demoPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">Page</span><span class="p">({</span>
         <span class="nx">name</span><span class="o">:</span><span class="s2">"Demo"</span><span class="p">,</span>
-        <span class="nx">route</span><span class="o">:</span><span class="s2">"demo"</span><span class="p">,</span>
+
+        <span class="nx">route</span><span class="o">:</span><span class="s2">"demo"</span><span class="p">,</span> <span class="c1">// If ommitted, page name will be used as a route</span>
+
+        <span class="c1">// similar to standard backbone events</span>
+        <span class="c1">// has additional framework events</span>
+        <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s1">'jui-pageloaded'</span><span class="o">:</span> <span class="s1">'pageLoaded'</span>
+        <span class="p">},</span>
+
+        <span class="nx">pageLoaded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="p">},</span>
+
+        <span class="c1">// will be called only once when page is initialized first time</span>
+        <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="p">},</span>
+
+        <span class="c1">// Blocks can accept pure HTML content via getContent() or template via template key</span>
         <span class="nx">blocks</span><span class="o">:</span><span class="p">{</span>
-            <span class="s1">'header'</span><span class="o">:</span><span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Header</span><span class="p">({</span>
+            <span class="s1">'header'</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Header</span><span class="p">({</span>
                 <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
                     <span class="k">return</span> <span class="s1">'&lt;h3&gt;Demo&lt;/h3&gt;'</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}),</span>
-            <span class="s1">'content'</span><span class="o">:</span><span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Content</span><span class="p">({</span>
-                <span class="nx">getContent</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
-                    <span class="k">return</span> <span class="s1">'&lt;p&gt;'</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">text</span> <span class="o">+</span> <span class="s1">'&lt;/p&gt;'</span>
+
+            <span class="s1">'content'</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Content</span><span class="p">({</span>
+                <span class="nx">template</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s2">"&lt;p&gt;{{text}}&lt;p&gt;"</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}),</span>
+
+            <span class="s1">'footer'</span><span class="o">:</span> <span class="k">new</span> <span class="nx">jumpui</span><span class="p">.</span><span class="nx">block</span><span class="p">.</span><span class="nx">Footer</span><span class="p">({</span>
+                <span class="c1">// Can specify additional attributes which will be appended to target element</span>
+                <span class="nx">attributes</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s1">'data-position'</span><span class="o">:</span> <span class="s1">'fixed'</span><span class="p">,</span>
+                    <span class="s1">'data-role'</span><span class="o">:</span> <span class="s1">'footer'</span>
+                <span class="p">},</span>
+                <span class="nx">getContent</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="s2">"&lt;h3&gt;Demo Footer&lt;/h3&gt;"</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">})</span>
         <span class="p">},</span>
+
+        <span class="c1">// will be called everytime page is displayed</span>
         <span class="nx">prepare</span><span class="o">:</span><span class="kd">function</span><span class="p">(){</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="o">=</span><span class="p">{</span><span class="s1">'text'</span><span class="o">:</span><span class="s1">'hello world'</span><span class="p">};</span>
             <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
@@ -137,25 +236,23 @@ Takes away pain with refreshing jquery-mobile views, when data changes. Allows p
 
     <span class="c1">//add page to app                </span>
     <span class="nx">app</span><span class="p">.</span><span class="nx">addPage</span><span class="p">(</span><span class="nx">demoPage</span><span class="p">);</span>
-    <span class="nx">app</span><span class="p">.</span><span class="nx">load</span><span class="p">();</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'application loaded, and nav to demo'</span><span class="p">);</span>
-</pre>
-</div>
 
+    <span class="c1">//fix for now</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">app</span><span class="p">.</span><span class="nx">load</span><span class="p">();</span>
+    <span class="p">},</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
 
 <p>Demo On <a href="http://jsfiddle.net/nachiket/mtLkk/">JSFiddle</a></p>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Backbone-jqmobile maintained by <a href="https://github.com/jumpbytehq">jumpbytehq</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+<p>For more demo check - <a href="http://apps.jumpbyte.com/backbone-jqmobile/">http://apps.jumpbyte.com/backbone-jqmobile/</a></p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
-
-              <script type="text/javascript">
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -165,7 +262,6 @@ Takes away pain with refreshing jquery-mobile views, when data changes. Allows p
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
