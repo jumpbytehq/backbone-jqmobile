@@ -13,16 +13,17 @@
 		</script>
 		<script id="list" type="text/x-handlebars-template">
 			<div data-fragment='menu'></div>
+			<div data-fragment='form'></div>
 		</script>
 		<script id="menu" type="text/x-handlebars-template">
 			<ul data-role='listview' data-inset="true">
-					{{#if source}}
-						{{#each source}}
-							<li><a>{{this.name}}</a></li>
-						{{/each}}
-					{{else}}
-						<li>No data found</li>
-					{{/if}}
+				{{#if list}}
+					{{#each list}}
+						<li><a>{{this.name}}</a></li>
+					{{/each}}
+				{{else}}
+					<li>No data found</li>
+				{{/if}}
 			</ul>
 		</script>
 		<!-- deps -->

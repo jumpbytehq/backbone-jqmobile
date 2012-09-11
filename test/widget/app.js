@@ -1,7 +1,24 @@
 jumpApp = {};
-$(document).bind("mobileinit", function(){	
-	 countryList = new Backbone.Collection();
-	countryList.add(new Backbone.Model({name:'India'}));
+$(document).bind("mobileinit", function(){
+	var ListItem = jumpui.fragment.ListItem.extend({
+		events: {
+			'click a': 'itemClick'
+		},
+		itemClick: function(e){
+			console.log('item clicked: ', this.model.get('name'));
+		},
+		render: function(){
+			this.$el.empty();
+			var el = $("<a>").append($('<span>').html(this.model.get('name')));
+			this.$el.append(el);
+		}
+	})
+	Country = Backbone.Model.extend({
+		name: undefined,
+		ext: -1
+	});
+	countryList = new Backbone.Collection();
+	countryList.add(new Country({name:'India', ext:2}));
 	
 	jumpApp.app = new jumpui.JqmApp({
 		platform: jumpui.Platform.WEB,
@@ -31,31 +48,19 @@ $(document).bind("mobileinit", function(){
 					},
 					template: "list",
 					fragments:{
-						'menu': new jumpui.Fragment({
-							template: 'menu',
+						'menu': new jumpui.fragment.List({
 							collection:countryList,
-							init: function(){
-								_.bindAll(this, 'refresh');
-								if(this.collection===undefined) {
-									throw('Collection is null');
-								}
-								this.collection.on('reset', this.refresh);
-								this.collection.on('add', this.refresh);
-								this.collection.on('remove', this.refresh);
-							},
-							refresh: function(){
-								this.render();
-								this.$("ul").listview();
-							},
-							getModel:function(){
-								return {source: this.collection.toJSON()};
-							}
-						})
-					},
-					renderDone: function(){
-						var listWidget = new jumpui.widget.ListWidget({collection: countryList});
-						listWidget.render();
-						this.$el.append(listWidget.$el);
+							ItemView: ListItem,
+							inset: false
+						}),
+						'form': new jumpui.fragment.Form({
+							model:Country,
+							items: [
+								{attr: 'name', type: 'text', label: 'Name', validation:[]},
+								{attr: 'ext', type: 'text', label: 'Ext', validation:[]}
+							],
+							inset: false
+						}),
 					}
 				}),
 				'footer':jumpApp.footer
