@@ -1,0 +1,10 @@
+{
+  "name": "backbone-jqmobile",
+  "description": "Backbone based framework for jquery mobile.",
+  "url": "https://github.com/jumpbytehq/backbone-jqmobile",
+  "version": "0.0.1",
+  "main": ["./dist/backbone-jqmobile.js","./dist/backbone-jqmobile.min.js"],
+  "dependencies": {
+	"backbone": ">=0.9"
+  }
+}
