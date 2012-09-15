@@ -168,7 +168,7 @@ jumpui.Fragment = jumpui.internal.AbstractView.extend({
 		//this.setElement(this.make(this.tagName, this.attributes));
 		//var $el = $(this.el);
 		if($.isFunction(this.template)) {
-			this.$el.append(this.block.page.app.templateEngine.parseHtml(this.template(), this.getModel()));
+			this.$el.append(this.block.page.app.templateEngine.parseHtml(this.template(this.model), this.getModel()));
 			return;
 		} else if(this.template!=undefined) {
 			this.$el.append(this.block.page.app.templateEngine.parse(this.template, this.getModel()));
@@ -210,7 +210,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 			var self = this;
 			var renderedFragments={};
 			if($.isFunction(this.template)) {
-				$el.append(this.page.app.templateEngine.parseHtml(this.template(), this.model, renderedFragments));			
+				$el.append(this.page.app.templateEngine.parseHtml(this.template(this.model), this.model, renderedFragments));			
 			} else if(this.template!=undefined) {
 				$el.append(this.page.app.templateEngine.parse(this.template, this.model, renderedFragments));			
 			}

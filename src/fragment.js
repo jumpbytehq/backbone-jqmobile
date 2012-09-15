@@ -14,7 +14,7 @@ jumpui.Fragment = jumpui.internal.AbstractView.extend({
 		//this.setElement(this.make(this.tagName, this.attributes));
 		//var $el = $(this.el);
 		if($.isFunction(this.template)) {
-			this.$el.append(this.block.page.app.templateEngine.parseHtml(this.template(), this.getModel()));
+			this.$el.append(this.block.page.app.templateEngine.parseHtml(this.template(this.model), this.getModel()));
 			return;
 		} else if(this.template!=undefined) {
 			this.$el.append(this.block.page.app.templateEngine.parse(this.template, this.getModel()));

@@ -19,7 +19,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 			var self = this;
 			var renderedFragments={};
 			if($.isFunction(this.template)) {
-				$el.append(this.page.app.templateEngine.parseHtml(this.template(), this.model, renderedFragments));			
+				$el.append(this.page.app.templateEngine.parseHtml(this.template(this.model), this.model, renderedFragments));			
 			} else if(this.template!=undefined) {
 				$el.append(this.page.app.templateEngine.parse(this.template, this.model, renderedFragments));			
 			}
