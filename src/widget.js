@@ -92,22 +92,36 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
 	
+	events : {
+		"submit form": "submit"
+	},
+	
 	init: function(){
+		var self = this;
+		
 		this.options = _.defaults({action: "javascript:;"})
+		this.model.on("error", function(model, error){
+			console.log("validation erorr ", model, error);
+			self.errorEl.html(error);
+			self.errorEl.show();
+		});
 	},
 	_createItem: function(formItem, parentEl){
 		var wrap = $('<div>').attr('data-role', 'fieldcontain');
 		
 		wrap.append($('<label>').attr('for',formItem.attr).text(formItem.label));
-		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend({type: formItem.type, name: formItem.attr, id: formItem.attr, value: formItem.value}, formItem.data || {})});
+		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend({type: formItem.type, name: formItem.attr, id: formItem.attr, value: this.model.get(formItem.attr)}, formItem.data || {})});
 		inputView.render();		
 		wrap.append(inputView.$el);
 		//parentEl.append(wrap);
 		return wrap;
 	},
 	getContainer: function(){
-		var el = $("<form></form>").attr("action", this.options.action);
-		return el;
+		this.errorEl = $("<div class='error'>this is error</div>");
+		this.$el.append(this.errorEl);
+		
+		var form = $("<form></form>").attr("action", this.options.action);
+		return form;
 	},
 	render:function(){
 		var el = this.getContainer();
@@ -126,6 +140,12 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 		var valueMap = {}
 		_.each(values, function(e){ _.extend( valueMap, e);})
 		return valueMap;
+	},
+	submit: function(){
+		this.errorEl.hide();
+		var values = this.getValues();
+		this.model.set(values);
+		if(this.model.isValid() && this.onSubmit) this.onSubmit();
 	}
 });
 
