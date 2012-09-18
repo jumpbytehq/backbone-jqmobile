@@ -50,18 +50,30 @@ $(document).bind("mobileinit", function(){
 					},
 					template: "list",
 					fragments:{
-						'menu': new jumpui.fragment.List({
-							collection:countryList,
-							ItemView: ListItem,
-							inset: false
-						}),
+						// 'menu': new jumpui.fragment.List({
+						// 							collection:countryList,
+						// 							ItemView: ListItem,
+						// 							inset: false
+						// 						}),
 						'form': new jumpui.fragment.Form({
+							events: {
+								"submit form": 'onSubmit'
+							},
 							model:Country,
 							items: [
-								{attr: 'name', type: 'text', label: 'Name', validation:[]},
-								{attr: 'ext', type: 'text', label: 'Ext', validation:[]}
+								{attr: 'name', type: 'text', label: 'Name', validation:[], value: "dhaval"},
+								{attr: 'password', type: 'password', label: 'Password', validation:[], data: {placeholder: "Password here"}},
+								{attr: 'ext', type: 'number', label: 'Ext', validation:[], value: 10},
+								{attr: 'type', type: 'range', label: 'Range', validation:[], data: {min: 0, max: 100}, value: 10},
+								// {attr: 'type', type: 'select', label: 'Type', validation:[]},
+ 								
 							],
-							inset: false
+							inset: false,
+							// action: "submit/here",
+							onSubmit: function(){
+								console.log("on submit ", this.getValues());
+								
+							}
 						}),
 					}
 				}),

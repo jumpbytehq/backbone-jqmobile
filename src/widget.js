@@ -26,43 +26,88 @@ jumpui.fragment.ListItem = Backbone.View.extend({
 
 jumpui.fragment.formItems = {
 	'text': jumpui.internal.AbstractView.extend({
-		tagName: 'input'
-	})
+		tagName: 'input',
+		attributes: {
+			type: "text"
+		}
+	}),
+	'password': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "password"
+		}
+	}),
+	'number': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "number"
+		}
+	}),
+	'submit': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "submit",
+			value: "Submit"
+		}
+	}),
+	'reset': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "reset",
+			value: "Reset"
+		}
+	}),
+	'range': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "range",
+			"data-highlight": true
+		}
+	}),
+	'select': jumpui.internal.AbstractView.extend({
+		tagName: 'select'
+	}), 
 };
+
+jumpui.fragment.FormFooter = jumpui.internal.AbstractView.extend({
+	tagName: "div",
+	attributes: {
+		"class": "ui-body" 
+	},
+	render: function(){
+		var wrap = $("<fieldset>").attr("class", "ui-grid-a");
+		
+		var submitBtn = $("<div>").addClass("ui-block-a").append(new jumpui.fragment.formItems.submit().$el);
+		var resetBtn = $("<div>").addClass("ui-block-b").append(new jumpui.fragment.formItems.reset().$el);
+		
+		wrap.append(submitBtn);
+		wrap.append(resetBtn);
+		
+		this.$el.append(wrap);
+		return this.$el;
+	}
+});
+
 jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
 	
-	ui: {
-		form: 'form',
-		formItems: 'form .form-items'
-	},
-	
 	init: function(){
-		
+		this.options = _.defaults({action: "javascript:;"})
 	},
 	_createItem: function(formItem, parentEl){
 		var wrap = $('<div>').attr('data-role', 'fieldcontain');
 		
 		wrap.append($('<label>').attr('for',formItem.attr).text(formItem.label));
-		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: {type: formItem.type, name: formItem.attr, id: formItem.attr}});
-		inputView.render();
-		
-		if(this.ui.formItems != undefined){
-			wrap.append(this.ui.formItems);
-		}else{
-			wrap.append(inputView.$el);
-		}
+		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend({type: formItem.type, name: formItem.attr, id: formItem.attr, value: formItem.value}, formItem.data || {})});
+		inputView.render();		
+		wrap.append(inputView.$el);
 		//parentEl.append(wrap);
 		return wrap;
 	},
 	getContainer: function(){
-		if(this.ui.form == null || this.ui.form == undefined){
-			this.ui.form = $("<form>");
-			this.ui.form.attr('data-inset',this.options.inset);
-		}
-		
-		return this.ui.formItems;
+		var el = $("<form></form>").attr("action", this.options.action);
+		return el;
 	},
 	render:function(){
 		var el = this.getContainer();
@@ -72,9 +117,15 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 			el.append(itemView)
 		});
 		
-		
-		
+		el.append(new jumpui.fragment.FormFooter().render());
 		this.$el.append(el);
+	},
+	getValues: function(){
+		var elements = $("input:not(:submit)input:not(:reset),select");
+		var values = _.map(elements, function(ele){ var ret = {}; ret[$(ele).attr("name")] = $(ele).val(); return ret; });
+		var valueMap = {}
+		_.each(values, function(e){ _.extend( valueMap, e);})
+		return valueMap;
 	}
 });
 
@@ -82,7 +133,7 @@ jumpui.fragment.List = jumpui.Fragment.extend({
 	collection:undefined,
 	ItemView: undefined,
 	options: {
-		inset: true
+		inset: false
 	},
 	init: function(){
 		_.bindAll(this, 'refresh');
