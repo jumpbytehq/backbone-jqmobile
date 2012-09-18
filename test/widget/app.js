@@ -4,14 +4,16 @@ $(document).bind("mobileinit", function(){
 		events: {
 			'click a': 'itemClick'
 		},
+		template: "listItemTpl",
 		itemClick: function(e){
 			console.log('item clicked: ', this.model.get('name'));
-		},
-		render: function(){
-			this.$el.empty();
-			var el = $("<a>").append($('<span>').html(this.model.get('name')));
-			this.$el.append(el);
 		}
+		// ,
+		// render: function(){
+		// 			this.$el.empty();
+		// 			var el = $("<a>").append($('<span>').html(this.model.get('name')));
+		// 			this.$el.append(el);
+		// 		}
 	})
 	Country = Backbone.Model.extend({
 		name: undefined,

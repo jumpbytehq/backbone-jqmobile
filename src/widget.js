@@ -5,8 +5,21 @@ jumpui.fragment.ListItem = Backbone.View.extend({
 	tagName: 'li',
 	attribute: 'name',
 	model:undefined,
+	templateEngine: undefined,
+	initialize: function(options){
+		this.templateEngine = options.templateEngine;
+	},
 	render:function(){
-		this.$el.html(this.model.get(this.attribute));
+		if(this.template){
+			var modelJson = _.isFunction(this.model.toJSON) ? this.model.toJSON() : this.model;
+			if($.isFunction(this.template)) {
+				this.$el.html(this.templateEngine.parseHtml(this.template(modelJson), modelJson));
+			} else {
+				this.$el.html(this.templateEngine.parse(this.template, modelJson));
+			}
+		}else{
+			this.$el.html(this.model.get(this.attribute));
+		}
 	}
 });
 
@@ -97,8 +110,11 @@ jumpui.fragment.List = jumpui.Fragment.extend({
 		this.$el.empty();
 		var container = this.getContainer();
 		var self = this;
+		
+		var templateEngine = this.block.page.app.templateEngine;
+		
 		this.collection.each(function(item){
-			var itemView = new self.ItemView({model: item});
+			var itemView = new self.ItemView({model: item, templateEngine: templateEngine});
 			itemView.render();
 			container.append(itemView.$el);
 		});
