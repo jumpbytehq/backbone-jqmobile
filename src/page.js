@@ -21,6 +21,20 @@ jumpui.Page = Backbone.View.extend({
 			this.route = this.name;
 		}
 		this.setBlocks(options.blocks || {});
+		
+		// If page has ui map then convert into the ui-element-map
+		if (this.ui) {
+		    if(!this._ui){
+	            this._ui = _.clone(this.ui);
+	        }
+
+	        var uiList = this._ui;
+	        _.each(uiList, function(value, key) {
+	            console.log("fetch " + key + ", " + value);
+	            self.ui[key] = self.$(value);            
+	        });
+		}
+		
 		if(this.init) {
 			this.init();
 		}
@@ -110,5 +124,7 @@ jumpui.Page = Backbone.View.extend({
 			console.log('Unable to reload page ' + this.name + ', as page is not current/visible page');
 			return false;
 		}
-	}
+	},
+	
+	
 });

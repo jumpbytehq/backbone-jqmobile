@@ -19,6 +19,12 @@ jumpui.fragment.formItems = {
 jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
+	
+	ui: {
+		form: 'form',
+		formItems: 'form .form-items'
+	},
+	
 	init: function(){
 		
 	},
@@ -28,14 +34,22 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 		wrap.append($('<label>').attr('for',formItem.attr).text(formItem.label));
 		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: {type: formItem.type, name: formItem.attr, id: formItem.attr}});
 		inputView.render();
-		wrap.append(inputView.$el);
+		
+		if(this.ui.formItems != undefined){
+			wrap.append(this.ui.formItems);
+		}else{
+			wrap.append(inputView.$el);
+		}
 		//parentEl.append(wrap);
 		return wrap;
 	},
 	getContainer: function(){
-		var el = $("<form>");
-		el.attr('data-inset',this.options.inset);
-		return el;
+		if(this.ui.form == null || this.ui.form == undefined){
+			this.ui.form = $("<form>");
+			this.ui.form.attr('data-inset',this.options.inset);
+		}
+		
+		return this.ui.formItems;
 	},
 	render:function(){
 		var el = this.getContainer();
@@ -44,6 +58,9 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 			var itemView = self._createItem(formItem, el);
 			el.append(itemView)
 		});
+		
+		
+		
 		this.$el.append(el);
 	}
 });

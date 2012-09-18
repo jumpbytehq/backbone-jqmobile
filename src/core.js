@@ -111,8 +111,31 @@ jumpui.internal = {};
 jumpui.internal.AbstractView = Backbone.View.extend({
 	initialize:function(){
 		_.extend(this, this.options);
+		
+		if (this.ui) {
+			var self = this;
+		    if(!this._ui){
+	            this._ui = _.clone(this.ui);
+	        }
+
+	        var uiList = this._ui;
+	        _.each(uiList, function(value, key) {
+	            console.log("fetch " + key + ", " + value);
+	            self.ui[key] = self.$(value);            
+	        });
+		}
+		
 		if(this.init) {
 			this.init();
 		}
+	},
+	
+	// clears the view for garbage-collection
+	close: function() {
+	    this.remove();
+	    this.unbind();
+	    if (this.onClose) {
+	        this.onClose();
+	    }
 	}
 });
