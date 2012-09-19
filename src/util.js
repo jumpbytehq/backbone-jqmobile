@@ -29,7 +29,19 @@ jumpui.util.serializeForm = function($el) {
           if ( lookup.length != undefined ) {
                lookup.push( $(this).val() );
           }else {
-                lookup[ named[ cap ] ]  = $(this).val();
+				if(lookup[ named[ cap ] ]){
+					if(_.isArray(lookup[named[cap]])){
+						lookup[named[cap]].push( $(this).val());
+					}else{
+						lookup[named[ cap ]] = [lookup[ named[ cap ]], $(this).val()];
+					}
+				}else{
+					if($(this).attr("data-field") == "array"){
+						lookup[ named[ cap ] ]  = [$(this).val()];
+					}else{
+                		lookup[ named[ cap ] ]  = $(this).val();
+					}
+				}
           }
 
           // assign the reference back to root

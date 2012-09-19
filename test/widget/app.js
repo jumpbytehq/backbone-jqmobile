@@ -21,11 +21,16 @@ $(document).bind("mobileinit", function(){
 		password: "",
 		range: 0,
 		select: "",
+		radiogroup: undefined,
+		checkboxgroup: [],
+		description: undefined,
 		
 		defaults: {
 			range: 10,
 			password: "test",
-			select: "one"
+			select: "two",
+			radiogroup: "one",
+			checkboxgroup: ["three", "one"]
 		},
 		
 		validate: function(attrs){
@@ -35,6 +40,10 @@ $(document).bind("mobileinit", function(){
 				return "Range is too small";
 			}else if(attrs.select == ""){
 				return "Please select a value";
+			}else if(attrs.radiogroup == undefined){
+				return "Please select a group";
+			}else if(attrs.checkboxgroup == undefined || attrs.checkboxgroup.length <= 0){
+				return "Please select atleast one item";
 			}
 		}
 	});
@@ -82,6 +91,9 @@ $(document).bind("mobileinit", function(){
 								{name: 'ext', type: 'number', label: 'Ext'},
 								{name: 'range', type: 'range', label: 'Range', data: {min: 0, max: 100}},
 								{name: 'select', type: 'select', label: 'Select', options: ["", "one", "two"]},
+								{name: 'radiogroup', type: 'radiogroup', label: 'Group Select', options: ["one", "two", "three"]},
+								{name: 'checkboxgroup', type: 'checkboxgroup', label: 'Group Select', options: ["one", "two", "three"]},
+								{name: 'description', type: 'textarea', label: 'Description', rows: 3},
 							],
 							inset: false,
 							// action: "submit/here",

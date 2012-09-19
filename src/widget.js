@@ -25,22 +25,13 @@ jumpui.fragment.ListItem = Backbone.View.extend({
 
 jumpui.fragment.formItems = {	
 	'text': jumpui.internal.AbstractView.extend({
-		tagName: 'input',
-		attributes: {
-			type: "text"
-		}
+		tagName: 'input'
 	}),
 	'password': jumpui.internal.AbstractView.extend({
-		tagName: 'input',
-		attributes: {
-			type: "password"
-		}
+		tagName: 'input'
 	}),
 	'number': jumpui.internal.AbstractView.extend({
-		tagName: 'input',
-		attributes: {
-			type: "number"
-		}
+		tagName: 'input'
 	}),
 	'submit': jumpui.internal.AbstractView.extend({
 		tagName: 'input',
@@ -67,7 +58,7 @@ jumpui.fragment.formItems = {
 		tagName: 'select',
 		initialize: function(options){
 			var self= this;
-			if(this.attributes.options){
+			if(this.attributes && this.attributes.options){
 				_.each(this.attributes.options, function(option){
 					var optionEl = $("<option>").attr("value", option).html(option);
 					if(self.attributes.value == option){
@@ -78,6 +69,59 @@ jumpui.fragment.formItems = {
 			}
 		}
 	}), 
+	
+	'radiogroup': jumpui.internal.AbstractView.extend({
+		tagName: 'fieldset',
+		attributes: {
+			"data-role": "controlgroup"
+		},
+		initialize: function(options){
+			var self= this;
+			if(this.attributes.options){
+				_.each(this.attributes.options, function(option){
+					var optionEl = $("<input>").attr({"type": "radio", "value": option, name: self.attributes.name, id: option}).html(option);
+					var labelEl = $("<label>").attr("for", option).html(option);
+					if(self.attributes.value == option){
+						optionEl.attr("checked", "checked");
+					}
+					self.$el.append(optionEl);
+					self.$el.append(labelEl);
+				});
+			}
+		}
+	}),
+	
+	'checkboxgroup': jumpui.internal.AbstractView.extend({
+		tagName: 'fieldset',
+		attributes: {
+			"data-role": "controlgroup"
+		},
+		initialize: function(options){
+			var self= this;
+			if(this.attributes.options){
+				_.each(this.attributes.options, function(option){
+					var optionEl = $("<input>").attr({"type": "checkbox", "value": option, name: self.attributes.name, id: option, "data-field": "array"}).html(option);
+					var labelEl = $("<label>").attr("for", option).html(option);
+					if(_.contains(self.attributes.value, option)){
+						optionEl.attr("checked", "checked");
+					}
+					self.$el.append(optionEl);
+					self.$el.append(labelEl);
+				});
+			}
+			
+			this.$el.bind("change", function(e){
+				var selected = $(e.target).val();
+				if(!$(e.target).attr("checked")){
+					self.model.set( self.attributes.name, _.difference(self.model.get(self.attributes.name), selected), {silent: true});
+				}
+			});
+		}
+	}),
+	
+	'textarea': jumpui.internal.AbstractView.extend({
+		tagName: 'textarea'
+	}),
 };
 
 jumpui.fragment.FormFooter = jumpui.internal.AbstractView.extend({
@@ -123,7 +167,13 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 		wrap.append($('<label>').attr('for',formItem.name).text(formItem.label));
 		formItem.value = this.model.get(formItem.name);
 		formItem.id = formItem.name;
-		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend(formItem, formItem.data || {})});
+		
+		var elementAttrs = _.extend(formItem, formItem.data || {});
+		var inputView = new jumpui.fragment.formItems[formItem.type]({
+			attributes: _.extend( elementAttrs, jumpui.fragment.formItems[formItem.type].prototype.attributes) ,
+			model: this.model
+			});
+			
 		this.itemsEl.push(inputView);
 		inputView.$el.bind("change", function(){		
 		});
