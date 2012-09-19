@@ -8,7 +8,7 @@ $(document).bind("mobileinit", function(){
 });
 
 /* ######## APP ############# */
-window.jumpui = {};
+window.jumpui = window.jumpui || {};
 /*
  * JqmApp is application class, There should be only one instance per app.
  */

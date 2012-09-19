@@ -1,3 +1,46 @@
+/* ######## UTIL ############# */
+
+window.jumpui = window.jumpui || {};
+jumpui.util = jumpui.util || {};
+
+jumpui.util.serializeForm = function($el) {
+    if ( $el == undefined || !$el.length ) { 
+		throw "No elements found in the form";
+	}
+
+    var data = {},
+      lookup = data; //current reference of data
+
+      $el.find(':input[type!="checkbox"][type!="radio"], input:checked').each(function() {
+        // data[a][b] becomes [ data, a, b ]
+        var named = this.name.replace(/\[([^\]]+)?\]/g, ',$1').split(','),
+            cap = named.length - 1,
+            i = 0;
+
+        // Ensure that only elements with valid `name` properties will be serialized
+        if ( named[ 0 ] ) {
+          for ( ; i < cap; i++ ) {
+              // move down the tree - create objects or array if necessary
+              lookup = lookup[ named[i] ] = lookup[ named[i] ] ||
+                  ( named[i+1] == "" ? [] : {} );
+          }
+
+          // at the end, psuh or assign the value
+          if ( lookup.length != undefined ) {
+               lookup.push( $(this).val() );
+          }else {
+                lookup[ named[ cap ] ]  = $(this).val();
+          }
+
+          // assign the reference back to root
+          lookup = data;
+
+        }
+      });
+
+    return data;
+};
+
 /* ####### SET JQUERY MOBILE DEFAULTS ######## */
 $(document).bind("mobileinit", function(){
 	console.log('setting Jquery mobile on mobile init');
@@ -8,7 +51,7 @@ $(document).bind("mobileinit", function(){
 });
 
 /* ######## APP ############# */
-window.jumpui = {};
+window.jumpui = window.jumpui || {};
 /*
  * JqmApp is application class, There should be only one instance per app.
  */
@@ -426,46 +469,121 @@ jumpui.fragment.ListItem = Backbone.View.extend({
 	}
 });
 
-
-jumpui.fragment.formItems = {
+jumpui.fragment.formItems = {	
 	'text': jumpui.internal.AbstractView.extend({
-		tagName: 'input'
-	})
+		tagName: 'input',
+		attributes: {
+			type: "text"
+		}
+	}),
+	'password': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "password"
+		}
+	}),
+	'number': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "number"
+		}
+	}),
+	'submit': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "submit",
+			value: "Submit"
+		}
+	}),
+	'reset': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "reset",
+			value: "Reset"
+		}
+	}),
+	'range': jumpui.internal.AbstractView.extend({
+		tagName: 'input',
+		attributes: {
+			type: "range",
+			"data-highlight": true
+		}
+	}),
+	'select': jumpui.internal.AbstractView.extend({
+		tagName: 'select',
+		initialize: function(options){
+			var self= this;
+			if(this.attributes.options){
+				_.each(this.attributes.options, function(option){
+					var optionEl = $("<option>").attr("value", option).html(option);
+					if(self.attributes.value == option){
+						optionEl.attr("selected", "selected");
+					}
+					self.$el.append(optionEl);
+				});
+			}
+		}
+	}), 
 };
+
+jumpui.fragment.FormFooter = jumpui.internal.AbstractView.extend({
+	tagName: "div",
+	attributes: {
+		"class": "ui-body" 
+	},
+	render: function(){
+		var wrap = $("<fieldset>").attr("class", "ui-grid-a");
+		
+		var submitBtn = $("<div>").addClass("ui-block-a").append(new jumpui.fragment.formItems.submit().$el);
+		var resetBtn = $("<div>").addClass("ui-block-b").append(new jumpui.fragment.formItems.reset().$el);
+		
+		wrap.append(submitBtn);
+		wrap.append(resetBtn);
+		
+		this.$el.append(wrap);
+		return this.$el;
+	}
+});
+
 jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
+	itemsEl: [],
 	
-	ui: {
-		form: 'form',
-		formItems: 'form .form-items'
+	events : {
+		"submit form": "submit"
 	},
 	
 	init: function(){
+		var self = this;
 		
+		this.options = _.defaults({action: "javascript:;"})
+		this.model.on("error", function(model, error){
+			self.errorEl.html(error);
+			self.errorEl.show();
+		});
 	},
 	_createItem: function(formItem, parentEl){
 		var wrap = $('<div>').attr('data-role', 'fieldcontain');
+
+		wrap.append($('<label>').attr('for',formItem.name).text(formItem.label));
+		formItem.value = this.model.get(formItem.name);
+		formItem.id = formItem.name;
+		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend(formItem, formItem.data || {})});
+		this.itemsEl.push(inputView);
+		inputView.$el.bind("change", function(){		
+		});
 		
-		wrap.append($('<label>').attr('for',formItem.attr).text(formItem.label));
-		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: {type: formItem.type, name: formItem.attr, id: formItem.attr}});
-		inputView.render();
-		
-		if(this.ui.formItems != undefined){
-			wrap.append(this.ui.formItems);
-		}else{
-			wrap.append(inputView.$el);
-		}
-		//parentEl.append(wrap);
+		inputView.render();		
+		wrap.append(inputView.$el);
 		return wrap;
 	},
 	getContainer: function(){
-		if(this.ui.form == null || this.ui.form == undefined){
-			this.ui.form = $("<form>");
-			this.ui.form.attr('data-inset',this.options.inset);
-		}
+		this.errorEl = $("<div class='error'>this is error</div>");
+		this.$el.append(this.errorEl);
 		
-		return this.ui.formItems;
+		var form = $("<form></form>").attr("action", this.options.action);
+		return form;
 	},
 	render:function(){
 		var el = this.getContainer();
@@ -475,9 +593,18 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 			el.append(itemView)
 		});
 		
-		
-		
+		el.append(new jumpui.fragment.FormFooter().render());
 		this.$el.append(el);
+	},
+	getValues: function(){
+		return jumpui.util.serializeForm(this.$el);
+	},
+	submit: function(){
+		this.errorEl.hide();
+		var values = this.getValues();
+		if(this.model.set(values)){
+			if(this.onSubmit) this.onSubmit();
+		}	
 	}
 });
 
@@ -485,7 +612,7 @@ jumpui.fragment.List = jumpui.Fragment.extend({
 	collection:undefined,
 	ItemView: undefined,
 	options: {
-		inset: true
+		inset: false
 	},
 	init: function(){
 		_.bindAll(this, 'refresh');

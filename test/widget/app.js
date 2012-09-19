@@ -20,10 +20,12 @@ $(document).bind("mobileinit", function(){
 		ext: -1,
 		password: "",
 		range: 0,
+		select: "",
 		
 		defaults: {
 			range: 10,
-			password: "test"
+			password: "test",
+			select: "one"
 		},
 		
 		validate: function(attrs){
@@ -31,6 +33,8 @@ $(document).bind("mobileinit", function(){
 				return "Password too short";
 			}else if(attrs.range <= 20){
 				return "Range is too small";
+			}else if(attrs.select == ""){
+				return "Please select a value";
 			}
 		}
 	});
@@ -73,12 +77,11 @@ $(document).bind("mobileinit", function(){
 						'form': new jumpui.fragment.Form({
 							model:countryList.at(0),
 							items: [
-								{attr: 'name', type: 'text', label: 'Name', validation:[]},
-								{attr: 'password', type: 'password', label: 'Password', validation:[], data: {placeholder: "Password here"}},
-								{attr: 'ext', type: 'number', label: 'Ext', validation:[]},
-								{attr: 'range', type: 'range', label: 'Range', validation:[], data: {min: 0, max: 100}},
-								// {attr: 'type', type: 'select', label: 'Type', validation:[]},
- 								
+								{name: 'name', type: 'text', label: 'Name'},
+								{name: 'password', type: 'password', label: 'Password', data: {placeholder: "Password here"}},
+								{name: 'ext', type: 'number', label: 'Ext'},
+								{name: 'range', type: 'range', label: 'Range', data: {min: 0, max: 100}},
+								{name: 'select', type: 'select', label: 'Select', options: ["", "one", "two"]},
 							],
 							inset: false,
 							// action: "submit/here",

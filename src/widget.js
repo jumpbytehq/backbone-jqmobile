@@ -23,8 +23,7 @@ jumpui.fragment.ListItem = Backbone.View.extend({
 	}
 });
 
-
-jumpui.fragment.formItems = {
+jumpui.fragment.formItems = {	
 	'text': jumpui.internal.AbstractView.extend({
 		tagName: 'input',
 		attributes: {
@@ -65,7 +64,19 @@ jumpui.fragment.formItems = {
 		}
 	}),
 	'select': jumpui.internal.AbstractView.extend({
-		tagName: 'select'
+		tagName: 'select',
+		initialize: function(options){
+			var self= this;
+			if(this.attributes.options){
+				_.each(this.attributes.options, function(option){
+					var optionEl = $("<option>").attr("value", option).html(option);
+					if(self.attributes.value == option){
+						optionEl.attr("selected", "selected");
+					}
+					self.$el.append(optionEl);
+				});
+			}
+		}
 	}), 
 };
 
@@ -91,6 +102,7 @@ jumpui.fragment.FormFooter = jumpui.internal.AbstractView.extend({
 jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
+	itemsEl: [],
 	
 	events : {
 		"submit form": "submit"
@@ -101,19 +113,23 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 		
 		this.options = _.defaults({action: "javascript:;"})
 		this.model.on("error", function(model, error){
-			console.log("validation erorr ", model, error);
 			self.errorEl.html(error);
 			self.errorEl.show();
 		});
 	},
 	_createItem: function(formItem, parentEl){
 		var wrap = $('<div>').attr('data-role', 'fieldcontain');
+
+		wrap.append($('<label>').attr('for',formItem.name).text(formItem.label));
+		formItem.value = this.model.get(formItem.name);
+		formItem.id = formItem.name;
+		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend(formItem, formItem.data || {})});
+		this.itemsEl.push(inputView);
+		inputView.$el.bind("change", function(){		
+		});
 		
-		wrap.append($('<label>').attr('for',formItem.attr).text(formItem.label));
-		var inputView = new jumpui.fragment.formItems[formItem.type]({attributes: _.extend({type: formItem.type, name: formItem.attr, id: formItem.attr, value: this.model.get(formItem.attr)}, formItem.data || {})});
 		inputView.render();		
 		wrap.append(inputView.$el);
-		//parentEl.append(wrap);
 		return wrap;
 	},
 	getContainer: function(){
@@ -135,17 +151,14 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 		this.$el.append(el);
 	},
 	getValues: function(){
-		var elements = $("input:not(:submit)input:not(:reset),select");
-		var values = _.map(elements, function(ele){ var ret = {}; ret[$(ele).attr("name")] = $(ele).val(); return ret; });
-		var valueMap = {}
-		_.each(values, function(e){ _.extend( valueMap, e);})
-		return valueMap;
+		return jumpui.util.serializeForm(this.$el);
 	},
 	submit: function(){
 		this.errorEl.hide();
 		var values = this.getValues();
-		this.model.set(values);
-		if(this.model.isValid() && this.onSubmit) this.onSubmit();
+		if(this.model.set(values)){
+			if(this.onSubmit) this.onSubmit();
+		}	
 	}
 });
 
