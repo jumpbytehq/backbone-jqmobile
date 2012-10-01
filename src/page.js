@@ -92,7 +92,7 @@ jumpui.Page = Backbone.View.extend({
 		allowed = this.prepare.apply(this, args);
 		//exit function
 		if(!allowed) { return; }
-		_.every(this.blocks, function(block){
+		_.each(this.blocks, function(block){
 			//prepare block
 			if(block.prepare) {
 				allowed = block.prepare.apply(block, args);
