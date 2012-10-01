@@ -86,16 +86,28 @@ $(document).bind("mobileinit", function(){
 						'form': new jumpui.fragment.Form({
 							model:countryList.at(0),
 							items: [
-								{name: 'name', type: 'text', label: 'Name'},
+								{name: 'name', type: 'text', placeholder: 'Name'},
 								{name: 'password', type: 'password', label: 'Password', data: {placeholder: "Password here"}},
 								{name: 'ext', type: 'number', label: 'Ext'},
 								{name: 'range', type: 'range', label: 'Range', data: {min: 0, max: 100}},
 								{name: 'select', type: 'select', label: 'Select', options: ["", "one", "two"]},
-								{name: 'radiogroup', type: 'radiogroup', label: 'Group Select', options: ["one", "two", "three"]},
-								{name: 'checkboxgroup', type: 'checkboxgroup', label: 'Group Select', options: ["one", "two", "three"]},
-								{name: 'description', type: 'textarea', label: 'Description', rows: 3},
+								// {name: 'radiogroup', type: 'radiogroup', label: 'Group Select', options: ["one", "two", "three"]},
+								// 								{name: 'checkboxgroup', type: 'checkboxgroup', label: 'Group Select', options: ["one", "two", "three"]},
+								// 								{name: 'description', type: 'textarea', label: 'Description', rows: 3},
 							],
 							inset: false,
+							submitButton: {label: "Login", show: true},
+							resetButton: {show: false},
+							formFooter: jumpui.fragment.FormFooter.extend({
+								attributes: {
+									'data-role': "fieldcontain"
+								},
+								render: function(){
+									var wrap = $("<input>").attr("type", "Submit").attr("value", "Login");
+									this.$el.append(wrap);
+									return this.$el;
+								}
+							}),
 							// action: "submit/here",
 							onSubmit: function(){
 								console.log("on submit ", this.model.toJSON());

@@ -36,15 +36,25 @@ jumpui.fragment.formItems = {
 	'submit': jumpui.internal.AbstractView.extend({
 		tagName: 'input',
 		attributes: {
-			type: "submit",
-			value: "Submit"
+			type: "submit"			
+		},
+		initialize: function(options){
+			if(options.show === false){
+				this.$el.hide();
+			}
+			this.$el.attr("value", options.value);
 		}
 	}),
 	'reset': jumpui.internal.AbstractView.extend({
 		tagName: 'input',
 		attributes: {
-			type: "reset",
-			value: "Reset"
+			type: "reset"
+		},
+		initialize: function(options){
+			if(options.show === false){
+				this.$el.hide();
+			}
+			this.$el.attr("value", options.value);
 		}
 	}),
 	'range': jumpui.internal.AbstractView.extend({
@@ -129,14 +139,22 @@ jumpui.fragment.FormFooter = jumpui.internal.AbstractView.extend({
 	attributes: {
 		"class": "ui-body" 
 	},
+	initialize: function(submitButton, resetButton){
+		this.submit = submitButton;
+		this.reset = resetButton;
+	},
 	render: function(){
 		var wrap = $("<fieldset>").attr("class", "ui-grid-a");
 		
-		var submitBtn = $("<div>").addClass("ui-block-a").append(new jumpui.fragment.formItems.submit().$el);
-		var resetBtn = $("<div>").addClass("ui-block-b").append(new jumpui.fragment.formItems.reset().$el);
+		if(this.submit.show){
+			var submitBtn = $("<div>").addClass("ui-block-a").append(new jumpui.fragment.formItems.submit({value: this.submit.label}).$el);
+			wrap.append(submitBtn);
+		}
 		
-		wrap.append(submitBtn);
-		wrap.append(resetBtn);
+		if(this.reset.show){
+			var resetBtn = $("<div>").addClass("ui-block-b").append(new jumpui.fragment.formItems.reset({value: this.reset.label}).$el);
+			wrap.append(resetBtn);
+		}
 		
 		this.$el.append(wrap);
 		return this.$el;
@@ -147,7 +165,15 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 	model: undefined,
 	items: undefined,
 	itemsEl: [],
-	
+	submitButton: {
+		show: true,
+		label: "Submit",
+	},
+	resetButton: {
+		show: true,
+		label: "Cancel"
+	},
+	formFooter: jumpui.fragment.FormFooter,
 	events : {
 		"submit form": "submit"
 	},
@@ -197,7 +223,7 @@ jumpui.fragment.Form = jumpui.Fragment.extend({
 			el.append(itemView)
 		});
 		
-		el.append(new jumpui.fragment.FormFooter().render());
+		el.append(new this.formFooter(this.submitButton, this.resetButton).render());
 		this.$el.append(el);
 	},
 	getValues: function(){
