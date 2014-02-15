@@ -37,7 +37,7 @@ jumpui.JqmApp = Backbone.Model.extend({
 		// });
 		
 		//Remove hidden DOM page
-		$(this.containerEl).live('pageshow', function(event, ui) {
+		$(this.containerEl).on('pageshow', function(event, ui) {
 		    $(ui.prevPage).remove();
 		});
 		
