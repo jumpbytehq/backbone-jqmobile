@@ -68,7 +68,7 @@ jumpui.Page = Backbone.View.extend({
 	_createDom: function() {
 		var self = this;
 		//NOTE: $(self.el).remove(); GETS REMOVED when page transition complete, so not removing here. 
-		this.setElement(this.make(this.tagName, this.attributes));
+		this.setElement(jQuery(document.createElement('div')).attr(this.attributes));//this.make(this.tagName, this.attributes));
 		_.each(_.keys(this.blocks), function(blockKey) {
 			var block = self.blocks[blockKey];
 			if(block.model==undefined) {

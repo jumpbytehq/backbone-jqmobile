@@ -109,8 +109,8 @@ jumpui.Platform.WEB = new jumpui.Platform({
 /* ######## PLATFORM END ############# */
 jumpui.internal = {};
 jumpui.internal.AbstractView = Backbone.View.extend({
-	initialize:function(){
-		_.extend(this, this.options);
+	initialize:function(opts){
+		_.extend(this, opts);
 		
 		if (this.ui) {
 			var self = this;

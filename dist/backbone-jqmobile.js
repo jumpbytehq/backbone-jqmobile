@@ -164,8 +164,8 @@ jumpui.Platform.WEB = new jumpui.Platform({
 /* ######## PLATFORM END ############# */
 jumpui.internal = {};
 jumpui.internal.AbstractView = Backbone.View.extend({
-	initialize:function(){
-		_.extend(this, this.options);
+	initialize:function(opts){
+		_.extend(this, opts);
 		
 		if (this.ui) {
 			var self = this;
@@ -281,7 +281,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 	},
 	render:function(){
 		$(this.el).remove();
-		this.setElement(this.make(this.tagName, this.attributes));
+		this.setElement(jQuery(document.createElement('div')).attr(this.attributes));//this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
 		if(this.template) {
 			//FRAGMENT Processing
@@ -397,7 +397,7 @@ jumpui.Page = Backbone.View.extend({
 	_createDom: function() {
 		var self = this;
 		//NOTE: $(self.el).remove(); GETS REMOVED when page transition complete, so not removing here. 
-		this.setElement(this.make(this.tagName, this.attributes));
+		this.setElement(jQuery(document.createElement('div')).attr(this.attributes));//this.make(this.tagName, this.attributes));
 		_.each(_.keys(this.blocks), function(blockKey) {
 			var block = self.blocks[blockKey];
 			if(block.model==undefined) {

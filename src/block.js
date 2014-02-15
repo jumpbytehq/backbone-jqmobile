@@ -12,7 +12,7 @@ jumpui.Block = jumpui.internal.AbstractView.extend({
 	},
 	render:function(){
 		$(this.el).remove();
-		this.setElement(this.make(this.tagName, this.attributes));
+		this.setElement(jQuery(document.createElement('div')).attr(this.attributes));//this.make(this.tagName, this.attributes));
 		var $el = $(this.el);
 		if(this.template) {
 			//FRAGMENT Processing
