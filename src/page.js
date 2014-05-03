@@ -29,6 +29,7 @@ jumpui.Page = Backbone.View.extend({
 	        }
 
 	        var uiList = this._ui;
+	        var self = this;
 	        _.each(uiList, function(value, key) {
 	            console.log("fetch " + key + ", " + value);
 	            self.ui[key] = self.$(value);            
@@ -50,6 +51,7 @@ jumpui.Page = Backbone.View.extend({
 		//return this.loaded;
 	},
 	_attachAndProcess:function(container) {
+		this.el.className = this.className + " " + this.name + "-page";
 		container.append(this.el);
 		$(this.el).page();
 		// $(this.el).trigger('create');
@@ -68,7 +70,7 @@ jumpui.Page = Backbone.View.extend({
 	_createDom: function() {
 		var self = this;
 		//NOTE: $(self.el).remove(); GETS REMOVED when page transition complete, so not removing here. 
-		this.setElement(jQuery(document.createElement('div')).attr(this.attributes));//this.make(this.tagName, this.attributes));
+		this.setElement(jQuery(document.createElement(this.tagName)).attr(this.attributes));
 		_.each(_.keys(this.blocks), function(blockKey) {
 			var block = self.blocks[blockKey];
 			if(block.model==undefined) {
@@ -87,6 +89,21 @@ jumpui.Page = Backbone.View.extend({
 		$(this.el).trigger('jui-pagerendered');
 	},
 	_load:function(args, container){
+		if(window.localStorage) {
+			var currentPage = localStorage.getItem("jqmobile_current_page");
+			localStorage.setItem("jqmobile_prev_page", currentPage);
+		    localStorage.setItem("jqmobile_current_page", location.hash);
+			sessionStorage.setItem("jqmobile_navigation_time", new Date().getTime());
+		}
+		
+		// Check for global page load method
+		if(this.app.beforePageLoad){
+			var allowed = this.app.beforePageLoad(this);
+			if(!allowed){
+				return false;
+			}
+		}
+
 		//prepare page
 		var allowed = false;
 		allowed = this.prepare.apply(this, args);
