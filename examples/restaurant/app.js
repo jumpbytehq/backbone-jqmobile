@@ -154,7 +154,7 @@ var homePage = new jumpui.Page({
 				'data-role': 'footer'
 			},
 			getContent: function(){
-				return "<h3><a href='http://www.jumpbyte.com'>Jumpbyte @ 2012</a></h3>";
+				return "<h3><a href='http://www.jumpbyte.com'>Jumpbyte @ 2014</a></h3>";
 			}
 		})
     },
@@ -372,10 +372,10 @@ var appsPage = new jumpui.Page({
 		var self = this;
 		
 		if(!this.model.survey){
-			$.mobile.showPageLoadingMsg();
+			$.mobile.loading('show', {text: 'Loading Survay', textVisible: true, theme: 'b'});
 			this.addAppSource("survey", function(){
 				self.model.survey = true;
-				$.mobile.hidePageLoadingMsg();
+				$.mobile.loading('hide');
 				app.navigate("openApp/survey");
 			});
 		}else{
