@@ -37,8 +37,8 @@
 				{{#each todos}}
 					<li>
 						<a class="toggle" data-todoId="{{id}}">
-							<img src="images/{{#if done}}checked_16.png{{else}}unchecked_16.png{{/if}}"></img>
-							<h3>{{title}}</h3>
+							<img src="images/{{#if done}}checked_16.png{{else}}unchecked_16.png{{/if}}" class="ui-li-icon"></img>
+							{{title}}
 						</a>
 						<a href="#input/{{id}}"></a>
 					</li>
